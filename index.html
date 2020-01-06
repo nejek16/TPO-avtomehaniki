@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <title>SSAD</title>
     <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
-	<link rel="stylesheet" type="text/css" href="css/index.css">
-	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-	
-		<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="./contents/bootstrap/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="css/datatable.css" />
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
 
-	<!-- Bootstrap Optional JavaScript -->
-	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-	<script>let $ = require('jquery');</script>
-	<script>require('popper.js');</script>
-	<script>require('bootstrap');</script>
-	
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="./contents/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/datatable.css" />
 
-  </head>
-  <body>
+    <!-- Bootstrap Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script>let $ = require('jquery');</script>
+    <script>require('popper.js');</script>
+    <script>require('bootstrap');</script>
+
+
+</head>
+
+<body>
     <div class="container">
         <div class="row">
             <div class="col-lg-3 col-md-2"></div>
@@ -56,35 +58,33 @@
                 </div>
                 <div class="col-lg-3 col-md-2"></div>
             </div>
-		</div>
-		</div>
-  </body>
-  <script>
-  function login(){
-    //TODO: Check if User exists
+        </div>
+    </div>
+</body>
+<script>
+    function login() {
+        //TODO: Check if User exists
 
-    //Navigate to correct page
-    let loginSuccessful = true
-    let isSkladiscnik = true
-    if(loginSuccessful)
-    {
-        if(isSkladiscnik)
-        {
-            //Skladiscnik
-            const ipcRenderer = require('electron').ipcRenderer;
-	        ipcRenderer.send('changeWindow', 'skladiscnikZaloga.html')
+        //Navigate to correct page
+        let loginSuccessful = true
+        let isSkladiscnik = true
+        if (loginSuccessful) {
+            if (isSkladiscnik) {
+                //Skladiscnik
+                const ipcRenderer = require('electron').ipcRenderer;
+                ipcRenderer.send('changeWindow', 'skladiscnikZaloga.html')
+            }
+            else {
+                //Mehanik
+                const ipcRenderer = require('electron').ipcRenderer;
+                ipcRenderer.send('changeWindow', 'mehanikZaloga.html')
+            }
         }
-        else
-        {
-            //Mehanik
-            	const ipcRenderer = require('electron').ipcRenderer;
-	            ipcRenderer.send('changeWindow', 'mehanikZaloga.html')
+        else {
+            alert("Invalid Username and Password!")
         }
-    }
-    else{
-        alert("Invalid Username and Password!")
-    }
 
-  }
-  </script>
+    }
+</script>
+
 </html>
