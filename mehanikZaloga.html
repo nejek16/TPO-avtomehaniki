@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Mehanik - Zaloga</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+	
+		<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="./contents/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/datatable.css"/>
+
+	<!-- Bootstrap Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	
+	<script>require('popper.js');</script>
+	<script>require('bootstrap');</script>
+	<script>let $ = require('jquery');</script>
+	<script>require( 'datatables.net' )( window, $ );</script>
+	<script>require( 'datatables.net-bs' )( window, $ );</script>
+	<script>require( 'datatables.net-jqui' )( window, $ );</script>
+
+
+</head>
+
+<body>
+	<div class="container p-3">
+		<div class="row">
+			<div id = narocila class="col-sm-4 text-left">
+				<button  type="submit" class="btn btn-outline-primary">NAROČILA</button>
+			</div>
+			<div id = zaloga class="col-sm-4 text-center align-middle">
+				<h1 class="text-center">Zaloga</h1>
+			</div>
+			<div id = izpis class="col-sm-4 text-right align-middle">
+				<button  type="submit" class="btn btn-outline-primary text-center">IZPIS</button>
+			</div>
+		</div>
+		<div style="margin-bottom: 60px;"></div>
+		<div class="row">
+		 <!-- Grid -->
+			 <div class="col-sm-12">
+				<div class="container wrapper">
+					<table class="table table-bordered table-hover" cellspacing="0" width="100%">
+						<thead>
+							<tr>
+								<th class="col-md-2">Ime artikla</th>
+								<th class="col-md-2">Številka artikla</th>
+								<th class="col-md-2">Količina</th>
+								<th class="col-md-2">Prevzem</th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th>Ime artikla</th>
+								<th>Številka artikla</th>
+								<th>Količina</th>
+								<th>Prevzem</th>
+							</tr>
+						</tfoot>
+						<tbody>
+							<tr>
+								<td>Airi Satou</td>
+								<td >Sexpialidocious</td>
+								<td>Tokyo</td>
+								<td>33</td>
+							</tr>
+							<tr>
+								<td>Tiger Nixon</td>
+								<td>System Architect</td>
+								<td>Edinburgh</td>
+								<td>61</td>
+							</tr>
+						</tbody>
+					</table>
+				  </div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+function completeGrid(){
+        $('.table').DataTable({
+      //disable sorting on last column
+
+      "columnDefs": [
+        { "orderable": false, "targets": 3 }
+      ],
+      "lengthChange": false,
+      "bPaginate": false
+    })  
+}
+completeGrid()
+</script>
+</html> 
