@@ -47,7 +47,7 @@
                                     <!-- Error Message -->
                                 </div>
                                 <div class="col-lg-6 login-btm login-button">
-                                    <button onclick="test()" type="submit" class="btn btn-outline-primary">LOGIN</button>
+                                    <a onclick="login()" class="btn btn-outline-primary">LOGIN</a>
                                 </div>
                             </div>
                         </form>
@@ -59,9 +59,10 @@
 		</div>
   </body>
   <script>
-function test(){
-	window.open("test.html","_top")
-} 
+  function login(){
+	const ipcRenderer = require('electron').ipcRenderer;
+	ipcRenderer.send('changeWindow', 'grid.html')
 
-</script>
+  }
+  </script>
 </html>
