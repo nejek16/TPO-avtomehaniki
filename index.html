@@ -65,14 +65,14 @@
 
     //Navigate to correct page
     let loginSuccessful = true
-    let isSkladiscnik = false
+    let isSkladiscnik = true
     if(loginSuccessful)
     {
         if(isSkladiscnik)
         {
             //Skladiscnik
             const ipcRenderer = require('electron').ipcRenderer;
-	        ipcRenderer.send('changeWindow', 'grid.html')
+	        ipcRenderer.send('changeWindow', 'skladiscnikZaloga.html')
         }
         else
         {
