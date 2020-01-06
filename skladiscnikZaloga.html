@@ -14,10 +14,9 @@
 
 	<!-- Bootstrap Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-
+	<script>let $ = require('jquery');</script>
 	<script>require('popper.js');</script>
 	<script>require('bootstrap');</script>
-	<script>let $ = require('jquery');</script>
 	<script>require('datatables.net')(window, $);</script>
 	<script>require('datatables.net-bs')(window, $);</script>
 	<script>require('datatables.net-jqui')(window, $);</script>
@@ -26,6 +25,40 @@
 </head>
 
 <body>
+	<!-- Dodaj zalogo -->
+	<div class="container">
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Dodaj zalogo</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<input id="dodajZalogo" type="number" class="form-control" placeholder="0">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Prekliči</button>
+						<button id="btn-DodajZalogo" type="button" class="btn btn-success">Dodaj zalogo</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<script>
+		$(document).ready(function () {
+			$(".dodaj").click(function () {
+				$("#myModal").modal();
+			});
+		});
+	</script>
+<!-- Content -->
 	<div class="container p-3">
 		<div class="row">
 			<div id=narocila class="col-sm-4 text-left">
@@ -73,10 +106,10 @@
 							<td>100</td>
 							<td>33</td>
 							<td>
-								<button class="btn btn-outline-success">DODAJ</button>
+								<button class="btn btn-outline-success dodaj">DODAJ</button>
 							</td>
 							<td>
-								<button class="btn btn-outline-danger">IZBRIŠI</button>
+								<button class="btn btn-outline-danger izbrisi">IZBRIŠI</button>
 							</td>
 						</tr>
 						<tr>
@@ -85,10 +118,10 @@
 							<td>Edinburgh</td>
 							<td>61</td>
 							<td>
-								<button class="btn btn-outline-success">DODAJ</button>
+								<button class="btn btn-outline-success dodaj">DODAJ</button>
 							</td>
 							<td>
-								<button class="btn btn-outline-danger">IZBRIŠI</button>
+								<button class="btn btn-outline-danger izbrisi">IZBRIŠI</button>
 							</td>
 						</tr>
 					</tbody>
@@ -99,6 +132,7 @@
 	</div>
 </body>
 <script>
+
 	//Naročila
 	$('#narocila').click(function () {
 		const ipcRenderer = require('electron').ipcRenderer;
@@ -108,7 +142,7 @@
 	//Poraba zaloge
 	$('#zalogaPoraba').click(function () {
 		const ipcRenderer = require('electron').ipcRenderer;
-		ipcRenderer.send('changeWindow', 'zalogaPorabaSkladiscnik.html')
+		ipcRenderer.send('changeWindow', 'skladiscnikPorabaZaloge.html')
 	});
 
 	//Odjava
