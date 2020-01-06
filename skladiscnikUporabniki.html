@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Skladiščnik - Uporabniki</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+	
+		<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="./contents/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/datatable.css"/>
+
+	<!-- Bootstrap Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	
+	<script>require('popper.js');</script>
+	<script>require('bootstrap');</script>
+	<script>let $ = require('jquery');</script>
+	<script>require( 'datatables.net' )( window, $ );</script>
+	<script>require( 'datatables.net-bs' )( window, $ );</script>
+	<script>require( 'datatables.net-jqui' )( window, $ );</script>
+
+
+</head>
+
+<body>
+	<div class="container p-3">
+		<div class="row">
+			<div class="col-sm-4 text-left">
+			</div>
+			<div id = zaloga class="col-sm-4 text-center align-middle">
+				<h1 class="text-center">Uporabniki</h1>
+			</div>
+			<div id = izpis class="col-sm-4 text-right align-middle">
+				<button id="nazaj" type="submit" class="btn btn-outline-primary text-center align-middle">NAZAJ</button>
+			</div>
+		</div>
+        <div style="margin-bottom: 60px;"></div>
+        <div class="row">
+            <div class="col-sm-3">
+                <label for="username">Uporabniško ime</label>
+                <input type="number" class="form-control align-middle" id="username">
+            </div>
+            <div class="col-sm-3">
+                <label for="password">Geslo</label>
+                <input type="number" class="form-control align-middle" id="password">
+            </div>
+            <div class="col-sm-3">
+                <label for="name">Celotno ime</label>
+                <input type="number" class="form-control align-middle" id="name">
+            </div>
+            <div style="line-height:95px" class="col-sm-3 align-middle text-right">
+                <button  type="submit" class="btn btn-outline-success">DODAJ</button>
+            </div>
+        </div>
+        <div style="margin-bottom: 30px;"></div>
+		<div class="row">
+		 <!-- Grid -->
+         <div class="col-sm-12" style="padding-left: 0px; padding-right: 0px;"></div>
+         <div class="container wrapper">
+             <table class="table table-bordered table-hover" cellspacing="0" width="100%">
+                 <thead>
+                     <tr>
+                         <th class="col-md-2">Uporabniško ime</th>
+                         <th class="col-md-2">Geslo</th>
+                         <th class="col-md-2">Celotno ime</th>
+                         <th class="col-md-2">Skladiščnik</th>
+                         <th class="col-md-2"></th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     <tr>
+                         <td>10</td>
+                         <td>Menjalnik</td>
+                         <td>100</td>
+                         <td>33</td>
+                         <td>
+                             <button class="btn btn-outline-danger">IZBRIŠI</button>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td>Tiger Nixon</td>
+                         <td>System Architect</td>
+                         <td>Edinburgh</td>
+                         <td>61</td>
+                         <td>
+                             <button class="btn btn-outline-danger">IZBRIŠI</button>
+                         </td>
+                     </tr>
+                 </tbody>
+             </table>
+         </div>
+     </div>
+		</div>
+	</div>
+</body>
+<script>
+//Odjava
+$('#nazaj').click(function(){
+        const ipcRenderer = require('electron').ipcRenderer;
+        ipcRenderer.send('changeWindow', 'skladiscnikZaloga.html')
+    });
+
+function completeGrid(){
+        $('.table').DataTable({
+      //disable sorting on last column
+
+      "columnDefs": [
+        { "orderable": false, "targets": 4 }
+      ],
+      "lengthChange": false,
+      "bPaginate": false
+    })  
+}
+completeGrid()
+</script>
+</html> 
