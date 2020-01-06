@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Skladiscnik - Zaloga</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+	
+		<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="./contents/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/datatable.css"/>
+
+	<!-- Bootstrap Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	
+	<script>require('popper.js');</script>
+	<script>require('bootstrap');</script>
+	<script>let $ = require('jquery');</script>
+	<script>require( 'datatables.net' )( window, $ );</script>
+	<script>require( 'datatables.net-bs' )( window, $ );</script>
+	<script>require( 'datatables.net-jqui' )( window, $ );</script>
+
+
+</head>
+
+<body>
+	<div class="container p-3">
+		<div class="row">
+			<div id = narocila class="col-sm-4 text-left">
+				<button  type="submit" class="btn btn-outline-primary">NAROČILA</button>
+			</div>
+			<div id = zaloga class="col-sm-4 text-center align-middle">
+				<h1 class="text-center">Zaloga</h1>
+			</div>
+			<div id = odjava class="col-sm-4 text-right align-middle">
+				<button  type="submit" class="btn btn-outline-primary text-center">ODJAVA</button>
+			</div>
+		</div>
+		<div class="row">
+			<div id="zalogaCelotna" class="col-sm-4 text-center align-middle">
+				<button  type="submit" class="btn btn-outline-dark text-center">CELOTEN IZPIS ZALOGE</button>
+			</div>
+			<div id="zalogaPoraba" class="col-sm-4 text-center align-middle">
+				<button  type="submit" class="btn btn-outline-primary text-center">PORABA ZALOGE</button>
+			</div>
+			<div id="mankArtikli" class="col-sm-4 text-center align-middle">
+				<button  type="submit" class="btn btn-outline-dark text-center">MANKAJOČI ARTIKLI</button>
+			</div>
+			
+		</div>
+		<div style="margin-bottom: 60px;"></div>
+		<div class="row">
+		 <!-- Grid -->
+		 <div class="col-sm-12" style="padding-left: 0px; padding-right: 0px;"></div>
+				<div class="container wrapper">
+					<table class="table table-bordered table-hover" cellspacing="0" width="100%">
+						<thead>
+							<tr>
+								<th class="col-md-2">ID artikla</th>
+								<th class="col-md-2">Številka artikla</th>
+								<th class="col-md-2">Ime</th>
+								<th class="col-md-2">Količina</th>
+								<th class="col-md-2"></th>
+								<th class="col-md-2"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>10</td>
+								<td>Menjalnik</td>
+								<td>100</td>
+								<td>33</td>
+								<td>
+									<button class="btn btn-outline-success">DODAJ</button>
+								</td>
+								<td>
+									<button class="btn btn-outline-danger">IZBRIŠI</button>
+								</td>
+							</tr>
+							<tr>
+								<td>Tiger Nixon</td>
+								<td>System Architect</td>
+								<td>Edinburgh</td>
+								<td>61</td>
+								<td>
+									<button class="btn btn-outline-success">DODAJ</button>
+								</td>
+								<td>
+									<button class="btn btn-outline-danger">IZBRIŠI</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				  </div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+//Odjava
+	$('#odjava').click(function(){
+	    const ipcRenderer = require('electron').ipcRenderer;
+	    ipcRenderer.send('changeWindow', 'index.html')
+	});
+
+	//grid settings
+	function completeGrid(){
+			$('.table').DataTable({
+				aoColumns: [ 
+				null,
+				null,
+				null,
+				null,
+				{ "bSortable": false },
+				{ "bSortable": false }
+				],
+
+		"columnDefs": [
+			{  "targets": 5}
+
+		],
+		"lengthChange": false,
+		"bPaginate": false
+		})  
+	}
+completeGrid()
+</script>
+</html> 

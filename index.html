@@ -61,8 +61,29 @@
   </body>
   <script>
   function login(){
-	const ipcRenderer = require('electron').ipcRenderer;
-	ipcRenderer.send('changeWindow', 'grid.html')
+    //TODO: Check if User exists
+
+    //Navigate to correct page
+    let loginSuccessful = true
+    let isSkladiscnik = true
+    if(loginSuccessful)
+    {
+        if(isSkladiscnik)
+        {
+            //Skladiscnik
+            const ipcRenderer = require('electron').ipcRenderer;
+	        ipcRenderer.send('changeWindow', 'skladiscnikZaloga.html')
+        }
+        else
+        {
+            //Mehanik
+            	const ipcRenderer = require('electron').ipcRenderer;
+	            ipcRenderer.send('changeWindow', 'mehanikZaloga.html')
+        }
+    }
+    else{
+        alert("Invalid Username and Password!")
+    }
 
   }
   </script>
