@@ -3,6 +3,7 @@ const { app, BrowserWindow } = require('electron')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+const ipcMain = require('electron').ipcMain;
 
 function createWindow () {
   // Create the browser window.
@@ -27,6 +28,10 @@ function createWindow () {
     // when you should delete the corresponding element.
     win = null
   })
+
+  ipcMain.on('changeWindow', function(arg,file) {
+    win.loadFile(String(file))
+  });
 }
 
 // This method will be called when Electron has finished
@@ -50,6 +55,8 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

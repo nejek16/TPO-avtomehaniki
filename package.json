@@ -7,12 +7,14 @@
     "start": "electron ."
   },
   "keywords": [
-    "skladisce"
+    "skladisce",
+    "typescript"
   ],
   "author": "alot of peeps",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^7.1.7"
+    "electron": "^7.1.7",
+    "typescript": "^2.8.3"
   },
   "dependencies": {
     "bootstrap": "^4.1.3",
