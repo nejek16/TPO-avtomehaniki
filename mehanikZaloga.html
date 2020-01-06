@@ -28,7 +28,7 @@
 	<div class="container p-3">
 		<div class="row">
 			<div id = narocila class="col-sm-4 text-left">
-				<button  type="submit" class="btn btn-outline-primary">NAROČILA</button>
+				<button id="narocila" type="submit" class="btn btn-outline-primary">NAROČILA</button>
 			</div>
 			<div id = zaloga class="col-sm-4 text-center align-middle">
 				<h1 class="text-center">Zaloga</h1>
@@ -78,6 +78,11 @@
 $('#odjava').click(function(){
         const ipcRenderer = require('electron').ipcRenderer;
         ipcRenderer.send('changeWindow', 'index.html')
+	});
+//naročila
+$('#narocila').click(function(){
+        const ipcRenderer = require('electron').ipcRenderer;
+        ipcRenderer.send('changeWindow', 'mehanikNarocila.html')
     });
 
 function completeGrid(){
