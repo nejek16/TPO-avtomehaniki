@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>SSAD</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+	<link rel="stylesheet" type="text/css" href="css/css.css">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+  </head>
+  <body>
+  <div id="LoginPage">  
+  <div class="container">
+	<div id="titleLogin">
+	SSAD
+	</div>
+    <label for="uname"><b>Username</b></label>
+    <input id="user" type="text" placeholder="Enter Username" name="uname" required>
+
+    <label for="psw"><b>Password</b></label>
+	
+    <input id="pass" type="password" placeholder="Enter Password" name="psw" required>
+	<div id="statusLogin"></div>
+    <button onclick="checkUser();">Login</button>   
+	<div id="connectionStatus"></div>
+  </div>
+  </div>
+  
+  <div id="skladiscnik">
+  
+  </div>
+  
+   <div id="mehanik">
+  
+  </div>
+  <script type="text/javascript">
+	var users;
+	var mysql = require('mysql');
+	var connection = mysql.createConnection({
+		host: 'localhost',
+		user: 'root',
+		password: '123456789',
+		database: 'storage'
+	});
+	
+	connection.connect(function(err){
+		var query = 'SELECT USERNAME, PASSWORD, SKLADISCNIK from uporabnik';
+		connection.query(query, function(err, results){
+			if(err){ console.log(error.code);document.getElementById("connectionStatus").innerHTML = "Napaka v povezavi.";}
+			else{
+				document.getElementById("connectionStatus").innerHTML ="Povezava vzpostavljena.";
+				users = JSON.parse(JSON.stringify(results));
+				console.log(results);
+			}
+		});
+		
+	});
+	
+	function checkUser(){
+		var username = document.getElementById("user").value;
+		var pass = document.getElementById("pass").value;
+		var isSklad = null;
+		var checked = false;
+		console.log(username+"|"+pass);
+		for(var i = 0; i<users.length; i++){
+		console.log(users[i].USERNAME+" | "+users[i].PASSWORD);
+			if(users[i].USERNAME === username && users[i].PASSWORD === pass){
+				checked = true;
+				isSklad = users[i].SKLADISCNIK;
+				break;
+			}
+		}
+		if(!checked){
+			document.getElementById("statusLogin").innerHTML = "Napačno uporabniškno ime ali geslo!";
+		}else{
+			document.getElementById("LoginPage").style.visibility = 'hidden';
+			if(isSklad == 1){
+				document.getElementById("skladiscnik").style.visibility = 'visible';
+			}else{
+				document.getElementById("mehanik").style.visibility = 'visible';
+			}
+		}
+		
+		console.log(isSklad+" | "+checked);
+	}
+  </script>
+  </body>
+</html>
