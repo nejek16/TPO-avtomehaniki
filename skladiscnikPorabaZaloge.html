@@ -21,11 +21,12 @@
     <script>require('datatables.net')(window, $);</script>
     <script>require('datatables.net-bs')(window, $);</script>
     <script>require('datatables.net-jqui')(window, $);</script>
-
+	
+	<script src="js/mainScript.js"></script>
 
 </head>
 
-<body>
+<body onload="getPorabaZaloge();">
     <div class="container p-3">
         <div class="row">
 			<div id=narocila class="col-sm-3"></div>
@@ -44,27 +45,16 @@
                     <table class="table table-bordered table-hover" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th class="col-md-2">Uporabnik</th>
+                                <th class="col-md-2">Mehanik</th>
                                 <th class="col-md-2">Artikel</th>
-                                <th class="col-md-2">ID Artikla</th>
                                 <th class="col-md-2">Količina</th>
+                                <th class="col-md-2">Datum</th>
                             </tr>
                         </thead>
                         <tfoot>
                         </tfoot>
-                        <tbody>
-                            <tr>
-                                <td>Airi Satou</td>
-                                <td>Sexpialidocious</td>
-                                <td>Tokyo</td>
-                                <td>10</td>
-                            </tr>
-                            <tr>
-                                <td>Tiger Nixon</td>
-                                <td>System Architect</td>
-                                <td>Edinburgh</td>
-                                <td>10</td>
-                            </tr>
+                        <tbody id="poraba">
+                           <!-- insert rows -->
                         </tbody>
                     </table>
                 </div>

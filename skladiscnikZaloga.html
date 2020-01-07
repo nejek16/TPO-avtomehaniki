@@ -20,11 +20,12 @@
 	<script>require('datatables.net')(window, $);</script>
 	<script>require('datatables.net-bs')(window, $);</script>
 	<script>require('datatables.net-jqui')(window, $);</script>
-
+	
+	<script src="js/mainScript.js"></script>
 
 </head>
 
-<body>
+<body onload="getZalogaSklad();">
 	<!-- Dodaj zalogo -->
 	<div class="container">
 		<!-- Modal -->
@@ -73,13 +74,13 @@
 		</div>
 		<div class="row">
 			<div id="zalogaCelotna" class="col-sm-4 text-center align-middle">
-				<button type="submit" class="btn btn-outline-dark text-center">CELOTEN IZPIS ZALOGE</button>
+				<button onclick="getZalogaSklad();" type="submit" class="btn btn-outline-dark text-center">CELOTEN IZPIS ZALOGE</button>
 			</div>
 			<div id="zalogaPoraba" class="col-sm-4 text-center align-middle">
 				<button type="submit" class="btn btn-outline-primary text-center">PORABA ZALOGE</button>
 			</div>
 			<div id="mankArtikli" class="col-sm-4 text-center align-middle">
-				<button type="submit" class="btn btn-outline-dark text-center">MANKAJOČI ARTIKLI</button>
+				<button onclick="getEmptyItems();" type="submit" class="btn btn-outline-dark text-center">MANKAJOČI ARTIKLI</button>
 			</div>
 
 		</div>
@@ -91,38 +92,16 @@
 				<table class="table table-bordered table-hover" cellspacing="0" width="100%">
 					<thead>
 						<tr>
-							<th class="col-md-2">ID artikla</th>
-							<th class="col-md-2">Številka artikla</th>
 							<th class="col-md-2">Ime</th>
+							<th class="col-md-2">Številka artikla</th>
 							<th class="col-md-2">Količina</th>
+							<th class="col-md-2">ID</th>
 							<th class="col-md-2"></th>
 							<th class="col-md-2"></th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td>10</td>
-							<td>Menjalnik</td>
-							<td>100</td>
-							<td>33</td>
-							<td>
-								<button class="btn btn-outline-success dodaj">DODAJ</button>
-							</td>
-							<td>
-								<button class="btn btn-outline-danger izbrisi">IZBRIŠI</button>
-							</td>
-						</tr>
-						<tr>
-							<td>Tiger Nixon</td>
-							<td>System Architect</td>
-							<td>Edinburgh</td>
-							<td>61</td>
-							<td>
-								<button class="btn btn-outline-success dodaj">DODAJ</button>
-							</td>
-							<td>
-								<button class="btn btn-outline-danger izbrisi">IZBRIŠI</button>
-							</td>
+					<tbody id="zalogca">
+						<!-- insert rows -->
 						</tr>
 					</tbody>
 				</table>

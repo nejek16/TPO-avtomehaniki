@@ -33,6 +33,7 @@ create table NAROCILO
    ID_ORDER             int not null AUTO_INCREMENT,
    PARTNUMBER           varchar(12) not null,
    PARTNAME             varchar(30) not null,
+   REQUESTED			bool not null,
    ORDERED              bool not null,
    ARRIVED              bool not null,
    CANCELLED            bool not null,
@@ -46,7 +47,7 @@ create table PORABIL
 (
    ID_ITEM              int not null,
    ID_USER              int not null,
-   DATE                 date not null
+   DATE                 date not null,
    KOLICINA				int not null
 );
 
@@ -76,14 +77,14 @@ create table UPORABNIK
 );
 
 alter table NAROCIL add constraint FK_NAROCIL foreign key (ID_USER)
-      references UPORABNIK (ID_USER) on delete restrict on update restrict;
+      references UPORABNIK (ID_USER) on delete cascade on update cascade;
 
 alter table NAROCIL add constraint FK_NAROCILO foreign key (ID_ORDER)
-      references NAROCILO (ID_ORDER) on delete restrict on update restrict;
+      references NAROCILO (ID_ORDER) on delete cascade on update cascade;
 
 alter table PORABIL add constraint FK_TAKES foreign key (ID_ITEM)
-      references SHRAMBA (ID_ITEM) on delete restrict on update restrict;
+      references SHRAMBA (ID_ITEM) on delete cascade on update cascade;
 
 alter table PORABIL add constraint FK_USES foreign key (ID_USER)
-      references UPORABNIK (ID_USER) on delete restrict on update restrict;
+      references UPORABNIK (ID_USER) on delete cascade on update cascade;
 
