@@ -115,12 +115,24 @@
 					cell = row.insertCell(3);
 					cell.innerHTML = hits[i].ID_ITEM;
 					cell = row.insertCell(4);
-					cell.innerHTML = "<button onclick=\"prevzemZaloge(this);\" class=\"btn btn-outline-success\">DODAJ</button>"
+					cell.innerHTML = "<button onclick=\"updateZaloga()\" class=\"btn btn-outline-success\">DODAJ</button>"
 					cell = row.insertCell(5);
-					cell.innerHTML = "<button class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"
+					cell.innerHTML = "<button onclick=\"deleteZaloga()\" class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"
 				}
 			}
 		});
+	}
+	
+	function updateZaloga(){
+		console.log("UPDATE");
+	}
+	
+	function deleteZaloga(){
+		if (confirm('Ali res želite izbrisati artikel')) {
+			console.log("DELETE ITEM");
+		} else {
+			console.log("SKIP THIS SHIT");
+		}
 	}
 	//zaloga skladiščnik, kjer je SUPPLY = 0   KONČANO
 	function getEmptyItems(){
@@ -361,14 +373,14 @@
 				cell = row.insertCell(2);
 				cell.innerHTML = "Zahtevano";
 				cell = row.insertCell(3);
-				cell.innerHTML = "<button class=\"btn btn-outline-danger\">POTRDI</button>"
+				cell.innerHTML = "<button onclick=\"onClickNarocila();\" class=\"btn btn-outline-danger\">POTRDI</button>"
 				cell = row.insertCell(4);
 				cell.innerHTML = hits[i].ID_ORDER;
 				cell.style.display = 'none';
 			}
 		});		
 	}
-	//pregled naročil NAROČENA
+	//pregled naročil NAROČENA KONČANO
 	function getOrderedOrders(){
 		clearTable("narocila");
 		var query = "SELECT ID_ORDER, PARTNUMBER, PARTNAME, REQUESTED, ORDERED, ARRIVED, CANCELLED FROM narocilo WHERE ORDERED= 1";
@@ -394,7 +406,7 @@
 			}
 		});		
 	}
-	//pregled naročil PREKLICANA
+	//pregled naročil PREKLICANA KONČANO
 	function getCancelledOrders(){
 		clearTable("narocila");
 		var query = "SELECT ID_ORDER, PARTNUMBER, PARTNAME FROM narocilo WHERE CANCELLED = 1";
@@ -415,14 +427,14 @@
 				cell = row.insertCell(2);
 				cell.innerHTML = "Preklicano";
 				cell = row.insertCell(3);
-				cell.innerHTML = "<button class=\"btn btn-outline-danger\">POTRDI</button>"
+				cell.innerHTML = "<button onclick=\"onClickNarocila();\" class=\"btn btn-outline-danger\">POTRDI</button>"
 				cell = row.insertCell(4);
 				cell.innerHTML = hits[i].ID_ORDER;
 				cell.style.display = 'none';
 			}
 		});		
 	}
-	//pregled naročil PRISPELA
+	//pregled naročil PRISPELA KONČANO
 	function getArrivedOrders(){
 		clearTable("narocila");
 		var query = "SELECT ID_ORDER, PARTNUMBER, PARTNAME FROM narocilo WHERE ARRIVED = 1";
@@ -443,7 +455,7 @@
 				cell = row.insertCell(2);
 				cell.innerHTML = "Prispelo";
 				cell = row.insertCell(3);
-				cell.innerHTML = "<button class=\"btn btn-outline-danger\">POTRDI</button>"
+				cell.innerHTML = "<button onclick=\"onClickNarocila();\" class=\"btn btn-outline-danger\">POTRDI</button>"
 				cell.style.display = 'none';
 				cell = row.insertCell(4);
 				cell.innerHTML = hits[i].ID_ORDER;
@@ -451,11 +463,16 @@
 			}
 		});		
 	}
+	//preklopi med stanji naročil
+	function onClickNarocila(){
+		console.log("TODO");
+	}
 	//bazo sm mal popravu, da se v primeru deleta naročila izbriše tudi v tabeli narocil, in v primeru artikla, da se zbriše poraba... to bom probu nekako spelat, da ostane sam dvomim
 	// dodal še 1 boolean za naročila k je manjkal
 	//TODO še en gumb v skladiscnikNarocila za Naročena - getOrderedOrders
 	//TODO v mehanik zalogi, ko pritisneš za prevzem - popup window, kjer vneseš željeno količino in vpis v porabil
-	//TODO nekako spravit search da bo delal in tisto štetje kok itemov je v tabeli
+	//TODO nekako spravit search da bo delal in tisto štetje kok itemov je v tabeli oziroma izbrisat vn v najslabšem primeru (cant be broken if it isnt there)
+	//TODO pri skladiscniku še eno okno za pregled nad uporabniki, dodajanje uporabnikov, update in delete
 	
 	
 	
