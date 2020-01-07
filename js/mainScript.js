@@ -119,6 +119,12 @@
 				hits = JSON.parse(JSON.stringify(results));
 				for(var i = 0; i<hits.length;i++){
 					row = table.insertRow(0);
+					row.setAttribute("role", "row");
+					if(i%2==0){
+						row.className += "even";
+					}else{
+						row.className += "odd";
+					}					
 					cell = row.insertCell(0);
 					cell.className += "sorting_1";
 					cell.innerHTML = hits[i].PARTNUMBER;
@@ -153,7 +159,24 @@
 		orderID = rowSelected.cells[4].innerHTML;
 		console.log(partname+"|"+partnumber+"|"+statusOrder+"|"+orderID);
 		var query = "UPDATE narocilo SET ORDERED = 0, ARRIVED = 0, CANCELLED = 1 WHERE ID_ORDER = "+orderID;
-		console.log(query);
+		connection.query(query, function(err, results){
+			if(err){console.log(err);}
+			else{
+				console.log(results);
+				clearTable("narocila");
+				getNarocila();
+			}
+		});		
+	}
+	
+	function clearTable(table){
+		document.getElementById(table).innerHTML='';
+	}
+	
+	function sendNarocilo(){
+		var partNumber = document.getElementById("stDela");
+		var partName
+	
 	}
 	
 	

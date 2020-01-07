@@ -47,6 +47,7 @@ create table PORABIL
    ID_ITEM              int not null,
    ID_USER              int not null,
    DATE                 date not null
+   KOLICINA				int not null
 );
 
 /*==============================================================*/
