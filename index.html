@@ -17,11 +17,13 @@
     <script>let $ = require('jquery');</script>
     <script>require('popper.js');</script>
     <script>require('bootstrap');</script>
+	
+	<script src="js/mainScript.js"></script>
 
 
 </head>
 
-<body>
+<body id="loginSite">
     <div class="container">
         <div class="row">
             <div class="col-lg-3 col-md-2"></div>
@@ -38,19 +40,19 @@
                         <form>
                             <div class="form-group">
                                 <label class="form-control-label">USERNAME</label>
-                                <input type="text" class="form-control">
+                                <input id="user" type="text" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label class="form-control-label">PASSWORD</label>
-                                <input type="password" class="form-control" i>
+                                <input id="pass" type="password" class="form-control" i>
                             </div>
 
                             <div class="col-lg-12 loginbttm">
-                                <div class="col-lg-6 login-btm login-text">
+                                <div class="col-lg-6 login-btm login-text" id="connectionStatus">
                                     <!-- Error Message -->
                                 </div>
                                 <div class="col-lg-6 login-btm login-button">
-                                    <a onclick="login()" class="btn btn-outline-primary">LOGIN</a>
+                                    <a onclick="checkUser();" class="btn btn-outline-primary">LOGIN</a>
                                 </div>
                             </div>
                         </form>
@@ -61,30 +63,5 @@
         </div>
     </div>
 </body>
-<script>
-    function login() {
-        //TODO: Check if User exists
-
-        //Navigate to correct page
-        let loginSuccessful = true
-        let isSkladiscnik = true
-        if (loginSuccessful) {
-            if (isSkladiscnik) {
-                //Skladiscnik
-                const ipcRenderer = require('electron').ipcRenderer;
-                ipcRenderer.send('changeWindow', 'skladiscnikZaloga.html')
-            }
-            else {
-                //Mehanik
-                const ipcRenderer = require('electron').ipcRenderer;
-                ipcRenderer.send('changeWindow', 'mehanikZaloga.html')
-            }
-        }
-        else {
-            alert("Invalid Username and Password!")
-        }
-
-    }
-</script>
 
 </html>

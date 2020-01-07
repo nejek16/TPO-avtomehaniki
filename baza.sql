@@ -31,7 +31,7 @@ create table NAROCIL
 create table NAROCILO
 (
    ID_ORDER             int not null AUTO_INCREMENT,
-   PARTNUMBER           float not null,
+   PARTNUMBER           varchar(12) not null,
    PARTNAME             varchar(30) not null,
    ORDERED              bool not null,
    ARRIVED              bool not null,
@@ -55,7 +55,7 @@ create table PORABIL
 create table SHRAMBA
 (
    ID_ITEM              int not null AUTO_INCREMENT,
-   PARTNUMBER           float not null,
+   PARTNUMBER           varchar(12) not null,
    PARTNAME             varchar(30) not null,
    SUPPLY               int not null,
    primary key (ID_ITEM)
