@@ -57,12 +57,12 @@
 			}
 		});
 	}
-	
+	//če iz neznanega razloga ni v username in userID podatkov kliči to da jih doda.
 	function getUserAndID(){
 		username = sessionStorage.getItem('user');
 		userID = sessionStorage.getItem('userID');
 	}
-	
+	//celotna zaloga KONČANO
 	function getZaloga(){
 		var query = "select ID_ITEM, PARTNAME, PARTNUMBER, SUPPLY from shramba";
 		var hits;
@@ -104,7 +104,7 @@
 		id = rowSelected.cells[4].innerHTML;
 		console.log(partname+"|"+partnumber+"|"+supply+"|"+id);
 	}
-	
+	//narocila od določenega uporabnika KONČANO
 	function getNarocila(){
 		getUserAndID();
 		var query = "select i.ID_ORDER, PARTNAME, PARTNUMBER, ORDERED, ARRIVED, CANCELLED from narocilo i JOIN narocil u ON (u.ID_ORDER = i.ID_ORDER) JOIN uporabnik t ON (t.ID_USER = u.ID_USER) AND t.ID_USER = "+userID;
@@ -147,7 +147,7 @@
 			}
 		});		
 	}
-	
+	//prekliči naročilo KONČANO
 	function cancelOrder(e){
 		var partnumber,partname,statusOrder;
 		var table = document.getElementById('narocila');
@@ -173,6 +173,7 @@
 		document.getElementById(table).innerHTML='';
 	}
 	
+	//vstavi novo naročilo in poveži naročilo z uporabnikom KONCANO
 	function sendNarocilo(){
 		var orderID;
 		var partNumber = document.getElementById("stDela").value;
@@ -204,6 +205,9 @@
 		});
 	}
 	
+	//TODO: dodaj okno za prevzem pri mehaniku, update za search in "showing 0 to 0 of 0 entries"
+	
+	//TODO: cew skladiščnik..... večino sam copy paste iz metod za mehanika
 	
 	
 	
