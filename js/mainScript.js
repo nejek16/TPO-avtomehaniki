@@ -174,9 +174,34 @@
 	}
 	
 	function sendNarocilo(){
-		var partNumber = document.getElementById("stDela");
-		var partName
-	
+		var orderID;
+		var partNumber = document.getElementById("stDela").value;
+		var partName = document.getElementById("imeDela").value;
+		console.log(partNumber+" | "+partName);
+		var query = "INSERT INTO narocilo (PARTNUMBER,PARTNAME,ORDERED,ARRIVED,CANCELLED) VALUES('"+partNumber+"','"+partName+"',1,0,0)";
+		console.log(query);
+		var query2 = "SELECT ID_ORDER FROM narocilo ORDER BY ID_ORDER DESC LIMIT 1";		
+		connection.query(query, function(err, results){
+			if(err){console.log(err);}
+			else{
+				connection.query(query2,function(err,results){
+					if(err){console.log(err);}
+					else{
+						orderID = JSON.parse(JSON.stringify(results));
+						orderID = orderID[0].ID_ORDER;
+						
+						var query3 = "INSERT INTO narocil (ID_ORDER, ID_USER) values ("+orderID+","+userID+")";
+						connection.query(query3, function(err, results){
+							if(err){console.log(err);}
+							else{
+								alert("Narocilo oddano");
+							}
+							
+						});
+					}
+				});
+			}
+		});
 	}
 	
 	
