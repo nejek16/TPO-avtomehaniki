@@ -104,18 +104,10 @@
 	}
 	//briši item
 	function deleteZaloga(e){
-		if (confirm('Ali res želite izbrisati artikel')) {
-			console.log("DELETE ITEM");
-			var partnumber,partname,statusOrder,itemID;
-			var table = document.getElementById('zalogca');
-			var rowId = e.parentNode.parentNode.rowIndex;
-			var rowSelected = table.getElementsByTagName('tr')[rowId-1];
-			partname = rowSelected.cells[1].innerHTML;
-			partnumber = rowSelected.cells[0].innerHTML;
-			statusOrder = rowSelected.cells[2].innerHTML;
-			itemID = rowSelected.cells[3].innerHTML;
-			console.log(partname+" | "+partnumber+" | "+statusOrder+" | "+itemID);
-			var query = "DELETE FROM shramba WHERE ID_ITEM = "+itemID;
+		if (confirm('Ali res želite izbrisati artikel')) {		
+			var table = $('.table').DataTable();
+			var data = table.row( $(e).parents('tr') ).data();
+			var query = "DELETE FROM shramba WHERE ID_ITEM = "+data[3];
 			connection.query(query, function(err, results){
 				if(err){console.log(err);}
 				else{
@@ -170,18 +162,12 @@
 	
 	//prevzem zaloge NEEDSFIX
 	function prevzemZaloge(e){
-		//preberi vrednosti iz vrste
-		var partnumber,partname,supply,id;
-		var table = document.getElementById('zalogca');
-		var rowId = e.parentNode.parentNode.rowIndex;
-		var rowSelected = table.getElementsByTagName('tr')[rowId-1];
-		partname = rowSelected.cells[0].innerHTML;
-		partnumber = rowSelected.cells[1].innerHTML;
-		supply = rowSelected.cells[2].innerHTML;
-		id = rowSelected.cells[4].innerHTML;
-		console.log(partname+"|"+partnumber+"|"+supply+"|"+id);
+		var table = $('.table').DataTable();
+		var data = table.row( $(e).parents('tr') ).data();
+		console.log(data);
+		
 	}
-	//narocila od določenega uporabnika KONČANO
+	//mehanik narocila od določenega uporabnika KONČANO
 	function getNarocila(){
 		getUserAndID();
 		var query = "select i.ID_ORDER, PARTNAME, PARTNUMBER, REQUESTED, ORDERED, ARRIVED, CANCELLED from narocilo i JOIN narocil u ON (u.ID_ORDER = i.ID_ORDER) JOIN uporabnik t ON (t.ID_USER = u.ID_USER) AND t.ID_USER = "+userID;
@@ -254,6 +240,7 @@
 							if(err){console.log(err);}
 							else{
 								alert("Narocilo oddano");
+								getNarocila();
 							}
 							
 						});
