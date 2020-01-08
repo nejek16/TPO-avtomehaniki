@@ -88,3 +88,4 @@ alter table PORABIL add constraint FK_TAKES foreign key (ID_ITEM)
 alter table PORABIL add constraint FK_USES foreign key (ID_USER)
       references UPORABNIK (ID_USER) on delete cascade on update cascade;
 
+ALTER TABLE uporabnik ADD UNIQUE (USERNAME);
