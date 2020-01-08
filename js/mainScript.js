@@ -117,19 +117,35 @@
 					cell = row.insertCell(4);
 					cell.innerHTML = "<button onclick=\"updateZaloga()\" class=\"btn btn-outline-success\">DODAJ</button>"
 					cell = row.insertCell(5);
-					cell.innerHTML = "<button onclick=\"deleteZaloga()\" class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"
+					cell.innerHTML = "<button onclick=\"deleteZaloga(this)\" class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"
 				}
 			}
 		});
 	}
-	
+	//updati zalogo
 	function updateZaloga(){
 		console.log("UPDATE");
 	}
-	
-	function deleteZaloga(){
+	//briši item
+	function deleteZaloga(e){
 		if (confirm('Ali res želite izbrisati artikel')) {
 			console.log("DELETE ITEM");
+			var partnumber,partname,statusOrder,itemID;
+			var table = document.getElementById('zalogca');
+			var rowId = e.parentNode.parentNode.rowIndex;
+			var rowSelected = table.getElementsByTagName('tr')[rowId-1];
+			partname = rowSelected.cells[1].innerHTML;
+			partnumber = rowSelected.cells[0].innerHTML;
+			statusOrder = rowSelected.cells[2].innerHTML;
+			itemID = rowSelected.cells[3].innerHTML;
+			console.log(partname+" | "+partnumber+" | "+statusOrder+" | "+itemID);
+			var query = "DELETE FROM shramba WHERE ID_ITEM = "+itemID;
+			connection.query(query, function(err, results){
+				if(err){console.log(err);}
+				else{
+					getZalogaSklad();
+				}
+			});
 		} else {
 			console.log("SKIP THIS SHIT");
 		}
@@ -264,7 +280,7 @@
 	}
 	//prekliči naročilo KONČANO
 	function cancelOrder(e){
-		var partnumber,partname,statusOrder;
+		var partnumber,partname,statusOrder,orderID;
 		var table = document.getElementById('narocila');
 		var rowId = e.parentNode.parentNode.rowIndex;
 		var rowSelected = table.getElementsByTagName('tr')[rowId-1];
@@ -473,7 +489,7 @@
 	//TODO v mehanik zalogi, ko pritisneš za prevzem - popup window, kjer vneseš željeno količino in vpis v porabil
 	//TODO nekako spravit search da bo delal in tisto štetje kok itemov je v tabeli oziroma izbrisat vn v najslabšem primeru (cant be broken if it isnt there)
 	//TODO pri skladiscniku še eno okno za pregled nad uporabniki, dodajanje uporabnikov, update in delete
-	
-	
+	//TODO skladiscikZaloga - polje za dodat nov item
+	//TODO skladiscnikZaloga - pri DODAJ - popup za vnos nove količine
 	
 	
