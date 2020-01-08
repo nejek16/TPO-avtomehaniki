@@ -26,6 +26,29 @@
 </head>
 
 <body onload="getNarocila();">
+	<div class="container">
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Naročilo oddano</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<p>Naročilo za artikel vspešno oddano.</p>
+					</div>
+					<div class="modal-footer">
+						<button id="btn-DodajZalogo" type="button" class="btn btn-success" onclick="closeModal();">Zapri</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
 	<div class="container p-3">
 		<div class="row">
 			<div class="col-sm-4 text-left">

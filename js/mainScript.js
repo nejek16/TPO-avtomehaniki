@@ -265,7 +265,6 @@
 		connection.query(query, function(err, results){
 			if(err){console.log(err);}
 			else{
-				console.log(results);
 				getNarocila();
 			}
 		});		
@@ -287,14 +286,12 @@
 					if(err){console.log(err);}
 					else{
 						orderID = JSON.parse(JSON.stringify(results));
-						orderID = orderID[0].ID_ORDER;
-						
+						orderID = orderID[0].ID_ORDER;						
 						var query3 = "INSERT INTO narocil (ID_ORDER, ID_USER) values ("+orderID+","+userID+")";
 						connection.query(query3, function(err, results){
 							if(err){console.log(err);}
 							else{
-								alert("Narocilo oddano");
-								getNarocila();
+								var modal = $("#myModal").modal();
 							}
 							
 						});
@@ -302,6 +299,11 @@
 				});
 			}
 		});
+	}
+	//zapri potrditveno okno o oddanem naročilu
+	function closeModal(){
+		getNarocila();
+		$('#myModal').modal('hide');
 	}
 	//pregled naročil VSA
 	function getAllOrders(){
