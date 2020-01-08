@@ -259,15 +259,9 @@
 	//prekliči naročilo KONČANO
 	function cancelOrder(e){
 		var partnumber,partname,statusOrder,orderID;
-		var table = document.getElementById('narocila');
-		var rowId = e.parentNode.parentNode.rowIndex;
-		var rowSelected = table.getElementsByTagName('tr')[rowId-1];
-		partname = rowSelected.cells[1].innerHTML;
-		partnumber = rowSelected.cells[0].innerHTML;
-		statusOrder = rowSelected.cells[2].innerHTML;
-		orderID = rowSelected.cells[4].innerHTML;
-		console.log(partname+"|"+partnumber+"|"+statusOrder+"|"+orderID);
-		var query = "UPDATE narocilo SET REQUESTED = 0, ORDERED = 0, ARRIVED = 0, CANCELLED = 1 WHERE ID_ORDER = "+orderID;
+		var table = $('.table').DataTable();
+		var data = table.row( $(e).parents('tr') ).data();		
+		var query = "UPDATE narocilo SET REQUESTED = 0, ORDERED = 0, ARRIVED = 0, CANCELLED = 1 WHERE ID_ORDER = "+data[4];
 		connection.query(query, function(err, results){
 			if(err){console.log(err);}
 			else{
