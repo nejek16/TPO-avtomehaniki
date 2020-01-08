@@ -62,42 +62,14 @@
 		username = sessionStorage.getItem('user');
 		userID = sessionStorage.getItem('userID');
 	}
-	//celotna zaloga mehanik KONČANO
-	function getZaloga(){
-		var query = "select ID_ITEM, PARTNAME, PARTNUMBER, SUPPLY from shramba";
-		var hits;
-		var row;
-		var cell;
-		var table = document.getElementById("zalogca");
-		connection.query(query, function(err, results){
-			if(err){console.log(err);}
-			else{
-				hits = JSON.parse(JSON.stringify(results));
-				for(var i = 0; i<hits.length;i++){
-					row = table.insertRow(0);
-					cell = row.insertCell(0);
-					cell.className += "sorting_1";
-					cell.innerHTML = hits[i].PARTNAME;
-					cell = row.insertCell(1);
-					cell.innerHTML = hits[i].PARTNUMBER;
-					cell = row.insertCell(2);
-					cell.innerHTML = hits[i].SUPPLY;	
-					cell = row.insertCell(3);
-					cell.innerHTML = "<button onclick=\"prevzemZaloge(this);\" class=\"btn btn-outline-success\">PREVZEM</button>"
-					cell = row.insertCell(4);
-					cell.innerHTML = hits[i].ID_ITEM;
-					cell.style.display = 'none';
-				}
-			}
-		});
-	}
-	
+	//celotna zaloga mehanik KONČANO	
 	function getZalogaFix(){
 		var query = "select ID_ITEM, PARTNAME, PARTNUMBER, SUPPLY from shramba";
 		var hits;
 		var row;
 		var cell;
 		var table = $('.table').DataTable();
+		table.clear().draw();
 		connection.query(query, function(err, results){
 			if(err){console.log(err);}
 			else{
@@ -110,36 +82,23 @@
 	}
 	//zaloga skladiščnik KONČANO
 	function getZalogaSklad(){
-		clearTable("zalogca");
 		var query = "select ID_ITEM, PARTNAME, PARTNUMBER, SUPPLY from shramba";
 		var hits;
 		var row;
 		var cell;
-		var table = document.getElementById("zalogca");
+		var table = $('.table').DataTable();
+		table.clear().draw();
 		connection.query(query, function(err, results){
 			if(err){console.log(err);}
 			else{
 				hits = JSON.parse(JSON.stringify(results));
 				for(var i = 0; i<hits.length;i++){
-					row = table.insertRow(0);
-					cell = row.insertCell(0);
-					cell.className += "sorting_1";
-					cell.innerHTML = hits[i].PARTNAME;
-					cell = row.insertCell(1);
-					cell.innerHTML = hits[i].PARTNUMBER;
-					cell = row.insertCell(2);
-					cell.innerHTML = hits[i].SUPPLY;
-					cell = row.insertCell(3);
-					cell.innerHTML = hits[i].ID_ITEM;
-					cell = row.insertCell(4);
-					cell.innerHTML = "<button onclick=\"updateZaloga()\" class=\"btn btn-outline-success\">DODAJ</button>"
-					cell = row.insertCell(5);
-					cell.innerHTML = "<button onclick=\"deleteZaloga(this)\" class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"
+					table.row.add([hits[i].PARTNAME,hits[i].PARTNUMBER,hits[i].SUPPLY,hits[i].ID_ITEM,"<button onclick=\"updateZaloga()\" class=\"btn btn-outline-success\">DODAJ</button>","<button onclick=\"deleteZaloga(this)\" class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"]).draw(false);
 				}
 			}
 		});
 	}
-	//updati zalogo
+	//updati zalogo NEEDSFIX
 	function updateZaloga(){
 		console.log("UPDATE");
 	}
@@ -167,33 +126,20 @@
 			console.log("SKIP THIS SHIT");
 		}
 	}
-	//zaloga skladiščnik, kjer je SUPPLY = 0   KONČANO
+	//zaloga skladiščnik, kjer je SUPPLY = 0   NEEDSFIX
 	function getEmptyItems(){
-		clearTable("zalogca");
 		var query = "select ID_ITEM, PARTNAME, PARTNUMBER, SUPPLY FROM shramba WHERE SUPPLY = 0";
 		var hits;
 		var row;
 		var cell;
-		var table = document.getElementById("zalogca");
+		var table =  $('.table').DataTable();
+		table.clear().draw();
 		connection.query(query, function(err, results){
 			if(err){console.log(err);}
 			else{
 				hits = JSON.parse(JSON.stringify(results));
 				for(var i = 0; i<hits.length;i++){
-					row = table.insertRow(0);
-					cell = row.insertCell(0);
-					cell.className += "sorting_1";
-					cell.innerHTML = hits[i].PARTNAME;
-					cell = row.insertCell(1);
-					cell.innerHTML = hits[i].PARTNUMBER;
-					cell = row.insertCell(2);
-					cell.innerHTML = hits[i].SUPPLY;
-					cell = row.insertCell(3);
-					cell.innerHTML = hits[i].ID_ITEM;
-					cell = row.insertCell(4);
-					cell.innerHTML = "<button onclick=\"prevzemZaloge(this);\" class=\"btn btn-outline-success\">DODAJ</button>"
-					cell = row.insertCell(5);
-					cell.innerHTML = "<button class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"
+					table.row.add([hits[i].PARTNAME,hits[i].PARTNUMBER,hits[i].SUPPLY,hits[i].ID_ITEM,"<button onclick=\"prevzemZaloge(this);\" class=\"btn btn-outline-success\">DODAJ</button>", "<button class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"]).draw(false);
 				}
 			}
 		});
@@ -203,33 +149,18 @@
 		var hits;
 		var row;
 		var cell;
-		var table = document.getElementById("poraba");
+		var table = $('.table').DataTable();
+		table.clear().draw();
 		var query = "SELECT FULL_NAME, DATE, KOLICINA, PARTNAME FROM shramba s JOIN porabil p ON (s.ID_ITEM = p.ID_ITEM) JOIN uporabnik u  ON (p.ID_USER = u.ID_USER)"
 		connection.query(query, function(err, results){
 			if(err){console.log(err);}
 			else{
 				hits = JSON.parse(JSON.stringify(results));
 				for(var i = 0; i<hits.length;i++){
-					row = table.insertRow(0);
-					row.setAttribute("role","row");
-					if(i%2==0){
-						row.className += "even";
-					}else{
-						row.className += "odd";
-					}
-					cell = row.insertCell(0);
-					cell.className += "sorting_1";
-					cell.innerHTML = hits[i].FULL_NAME;
-					cell = row.insertCell(1);
-					cell.innerHTML = hits[i].PARTNAME;
-					cell = row.insertCell(2);
-					cell.innerHTML = hits[i].KOLICINA;
-					cell = row.insertCell(3);
 					var date;
 					var temp = hits[i].DATE.toString().substr(0,10).split("-");
-					console.log(temp);
 					date = temp[2]+"."+temp[1]+"."+temp[0];
-					cell.innerHTML = date;
+					table.row.add([hits[i].FULL_NAME,hits[i].PARTNAME,hits[i].KOLICINA,date]).draw(false);
 					
 				}				
 			}
@@ -237,7 +168,7 @@
 	}
 	
 	
-	//prevzem zaloge mehanik - TODO popup window, kjer si izbereš količino in insert v umesno tabelo "porabil" in update SUPPLY v shramba
+	//prevzem zaloge NEEDSFIX
 	function prevzemZaloge(e){
 		//preberi vrednosti iz vrste
 		var partnumber,partname,supply,id;
@@ -260,6 +191,7 @@
 		var cell;
 		var statusOrder;
 		var table = $('.table').DataTable();
+		table.clear().draw();
 		connection.query(query, function(err, results){
 			if(err){console.log(err);}
 			else{
@@ -278,7 +210,7 @@
 			}
 		});		
 	}
-	//prekliči naročilo KONČANO
+	//prekliči naročilo NEEDSFIX
 	function cancelOrder(e){
 		var partnumber,partname,statusOrder,orderID;
 		var table = document.getElementById('narocila');
@@ -294,17 +226,12 @@
 			if(err){console.log(err);}
 			else{
 				console.log(results);
-				clearTable("narocila");
 				getNarocila();
 			}
 		});		
 	}
-	// počisti tabelo za zamenjavo podatkov - arg - ID tabele (zalogca,narocila,...)
-	function clearTable(table){
-		document.getElementById(table).innerHTML='';
-	}
 	
-	//vstavi novo naročilo in poveži naročilo z uporabnikom KONCANO
+	//vstavi novo naročilo in poveži naročilo z uporabnikom NEEDSFIX
 	function sendNarocilo(){
 		var orderID;
 		var partNumber = document.getElementById("stDela").value;
@@ -337,22 +264,16 @@
 	}
 	//pregled naročil VSA
 	function getAllOrders(){
-		clearTable("narocila");
 		var query = "SELECT ID_ORDER, PARTNUMBER, PARTNAME, REQUESTED, ORDERED, ARRIVED, CANCELLED FROM narocilo";
 		var row;
 		var cell;
 		var hits;
-		var table = document.getElementById("narocila");
+		var table = $('.table').DataTable();
+		table.clear().draw();
 		document.getElementById("buttonPotrdi").style.display = 'none';
 		connection.query(query, function(err, results){
 			hits = JSON.parse(JSON.stringify(results));
 			for(var i = 0; i<hits.length;i++){
-				row = table.insertRow(0);
-				cell = row.insertCell(0);
-				cell.className += "sorting_1";
-				cell.innerHTML = hits[i].PARTNUMBER;
-				cell = row.insertCell(1);
-				cell.innerHTML = hits[i].PARTNAME;
 				var flagOrdered = hits[i].ORDERED;
 				var flagArrived = hits[i].ARRIVED;
 				var flagCancelled = hits[i].CANCELLED;
@@ -362,126 +283,72 @@
 				else if(flagCancelled == 1){statusOrder = "Preklicano";}
 				else if(flagOrdered == 1){statusOrder = "Naročeno";}
 				else if(flagRequested == 1){statusOrder = "Zahtevano";}
-				cell = row.insertCell(2);
-				cell.innerHTML = statusOrder;
+				table.row.add([hits[i].PARTNUMBER,hits[i].PARTNAME,statusOrder,statusOrder]).draw(false);
 				
 			}
 		});
 	}
 	//pregled naročil NOVA
 	function getNewOrders(){
-		clearTable("narocila");
 		var query = "SELECT ID_ORDER, PARTNUMBER, PARTNAME FROM narocilo WHERE REQUESTED = 1";
 		var row;
 		var cell;
 		var hits;
-		var table = document.getElementById("narocila");
-		document.getElementById("buttonPotrdi").style.display = 'visible';
+		var table =  $('.table').DataTable();
+		table.clear().draw();
 		connection.query(query, function(err, results){
 			hits = JSON.parse(JSON.stringify(results));
 			for(var i = 0; i<hits.length;i++){
-				row = table.insertRow(0);
-				cell = row.insertCell(0);
-				cell.className += "sorting_1";
-				cell.innerHTML = hits[i].PARTNUMBER;
-				cell = row.insertCell(1);
-				cell.innerHTML = hits[i].PARTNAME;
-				cell = row.insertCell(2);
-				cell.innerHTML = "Zahtevano";
-				cell = row.insertCell(3);
-				cell.innerHTML = "<button onclick=\"onClickNarocila(this);\" class=\"btn btn-outline-success\">POTRDI</button>"
-				cell = row.insertCell(4);
-				cell.innerHTML = hits[i].ID_ORDER;
-				cell.style.display = 'none';
+				table.row.add([hits[i].PARTNUMBER,hits[i].PARTNAME,"Zahtevano","<button onclick=\"onClickNarocila(this);\" class=\"btn btn-outline-success\">POTRDI</button>",hits[i].ID_ORDER]).draw(false);
 			}
 		});		
 	}
 	//pregled naročil NAROČENA KONČANO
 	function getOrderedOrders(){
-		clearTable("narocila");
 		var query = "SELECT ID_ORDER, PARTNUMBER, PARTNAME, REQUESTED, ORDERED, ARRIVED, CANCELLED FROM narocilo WHERE ORDERED= 1";
 		var row;
 		var cell;
 		var hits;
-		var table = document.getElementById("narocila");
-		document.getElementById("buttonPotrdi").style.display = 'visible';
+		var table = $('.table').DataTable();
+		table.clear().draw();
 		connection.query(query, function(err, results){
 			hits = JSON.parse(JSON.stringify(results));
 			for(var i = 0; i<hits.length;i++){
-				row = table.insertRow(0);
-				cell = row.insertCell(0);
-				cell.className += "sorting_1";
-				cell.innerHTML = hits[i].PARTNUMBER;
-				cell = row.insertCell(1);
-				cell.innerHTML = hits[i].PARTNAME;
-				cell = row.insertCell(2);
-				cell.innerHTML = "Naročeno";
-				cell = row.insertCell(3);
-				cell.innerHTML = "<button onclick=\"onClickNarocila(this);\" class=\"btn btn-outline-success\">POTRDI</button>"
-				cell = row.insertCell(4);
-				cell.innerHTML = hits[i].ID_ORDER;
-				cell.style.display = 'none';
+				table.row.add([hits[i].PARTNUMBER,hits[i].PARTNAME,"Naročeno","<button onclick=\"onClickNarocila(this);\" class=\"btn btn-outline-success\">POTRDI</button>",hits[i].ID_ORDER]).draw(false);
 			}
 		});		
 	}
 	//pregled naročil PREKLICANA KONČANO
 	function getCancelledOrders(){
-		clearTable("narocila");
 		var query = "SELECT ID_ORDER, PARTNUMBER, PARTNAME FROM narocilo WHERE CANCELLED = 1";
 		var row;
 		var cell;
 		var hits;
-		var table = document.getElementById("narocila");
-		document.getElementById("buttonPotrdi").style.display = 'visible';
+		var table = $('.table').DataTable();
+		table.clear().draw();
 		connection.query(query, function(err, results){
 			hits = JSON.parse(JSON.stringify(results));
 			for(var i = 0; i<hits.length;i++){
-				row = table.insertRow(0);
-				cell = row.insertCell(0);
-				cell.className += "sorting_1";
-				cell.innerHTML = hits[i].PARTNUMBER;
-				cell = row.insertCell(1);
-				cell.innerHTML = hits[i].PARTNAME;				
-				cell = row.insertCell(2);
-				cell.innerHTML = "Preklicano";
-				cell = row.insertCell(3);
-				cell.innerHTML = "<button onclick=\"onClickNarocila(this);\" class=\"btn btn-outline-danger\">POTRDI</button>"
-				cell = row.insertCell(4);
-				cell.innerHTML = hits[i].ID_ORDER;
-				cell.style.display = 'none';
+				table.row.add([hits[i].PARTNUMBER,hits[i].PARTNAME,"Preklicano","<button onclick=\"onClickNarocila(this);\" class=\"btn btn-outline-danger\">POTRDI</button>",hits[i].ID_ORDER]).draw(false);
 			}
 		});		
 	}
 	//pregled naročil PRISPELA KONČANO
 	function getArrivedOrders(){
-		clearTable("narocila");
 		var query = "SELECT ID_ORDER, PARTNUMBER, PARTNAME FROM narocilo WHERE ARRIVED = 1";
 		var row;
 		var cell;
 		var hits;
-		var table = document.getElementById("narocila");
-		document.getElementById("buttonPotrdi").style.display = 'visible';
+		var table = $('.table').DataTable();
+		table.clear().draw();
 		connection.query(query, function(err, results){
 			hits = JSON.parse(JSON.stringify(results));
 			for(var i = 0; i<hits.length;i++){
-				row = table.insertRow(0);
-				cell = row.insertCell(0);
-				cell.className += "sorting_1";
-				cell.innerHTML = hits[i].PARTNUMBER;
-				cell = row.insertCell(1);
-				cell.innerHTML = hits[i].PARTNAME;				
-				cell = row.insertCell(2);
-				cell.innerHTML = "Prispelo";
-				cell = row.insertCell(3);
-				cell.innerHTML = "<button onclick=\"onClickNarocila(this);\" class=\"btn btn-outline-success\">POTRDI</button>"
-				cell.style.display = 'none';
-				cell = row.insertCell(4);
-				cell.innerHTML = hits[i].ID_ORDER;
-				cell.style.display = 'none';
+				table.row.add([hits[i].PARTNUMBER,hits[i].PARTNAME,"Prispelo","<button onclick=\"onClickNarocila(this);\" class=\"btn btn-outline-success\">POTRDI</button>",hits[i].ID_ORDER]).draw(false);
 			}
 		});		
 	}
-	//preklopi med stanji naročil
+	//preklopi med stanji naročil NEESSFIX
 	function onClickNarocila(e){
 		var partnumber,partname,statusOrder,orderID;
 		var table = document.getElementById('narocila');
