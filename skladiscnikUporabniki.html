@@ -21,10 +21,10 @@
 	<script>require( 'datatables.net-bs' )( window, $ );</script>
 	<script>require( 'datatables.net-jqui' )( window, $ );</script>
 
-
+    <script src="js/mainScript.js"></script>
 </head>
 
-<body>
+<body onload="getUsers();">
 	<div class="container p-3">
 		<div class="row">
 			<div class="col-sm-4 text-left">
@@ -37,23 +37,37 @@
 			</div>
 		</div>
         <div style="margin-bottom: 60px;"></div>
-        <div class="row">
-            <div class="col-sm-3">
-                <label for="username">Uporabniško ime</label>
-                <input type="number" class="form-control align-middle" id="username">
+        <form id="addUserForm">
+            <div class="row">
+                <div class="col-sm-3">
+                    <label for="username">Uporabniško ime</label>
+                    <input type="text" class="form-control align-middle" id="username">
+                </div>
+                <div class="col-sm-3">
+                    <label for="password">Geslo</label>
+                    <input type="text" class="form-control align-middle" id="password">
+                </div>
+                <div class="col-sm-3">
+                    <label for="name">Celotno ime</label>
+                    <input type="text" class="form-control align-middle" id="name">
+                </div>
+                <div class="col-sm-1">
+                    <label for="name">Skladiščnik</label>
+                    <input type="checkbox" class="form-control align-middle" id="skladiscnik">
+                </div>
+                <div style="line-height:95px" class="col-sm-2 align-middle text-right">
+                    <button type="submit" class="btn btn-outline-success" onclick="addUserPotrdi();">DODAJ</button>
+                </div>
             </div>
-            <div class="col-sm-3">
-                <label for="password">Geslo</label>
-                <input type="number" class="form-control align-middle" id="password">
-            </div>
-            <div class="col-sm-3">
-                <label for="name">Celotno ime</label>
-                <input type="number" class="form-control align-middle" id="name">
-            </div>
-            <div style="line-height:95px" class="col-sm-3 align-middle text-right">
-                <button  type="submit" class="btn btn-outline-success">DODAJ</button>
-            </div>
-        </div>
+        </form>
+
+        <script>
+            $("#addUserForm").submit(function(e) {
+                e.preventDefault();
+                return false;
+            });
+        </script>
+
         <div style="margin-bottom: 30px;"></div>
 		<div class="row">
 		 <!-- Grid -->
@@ -62,6 +76,7 @@
              <table class="table table-bordered table-hover" cellspacing="0" width="100%">
                  <thead>
                      <tr>
+                         <th class="col-md-2">Id</th>
                          <th class="col-md-2">Uporabniško ime</th>
                          <th class="col-md-2">Geslo</th>
                          <th class="col-md-2">Celotno ime</th>
@@ -71,6 +86,7 @@
                  </thead>
                  <tbody>
                      <tr>
+                         <td>1</td>
                          <td>10</td>
                          <td>Menjalnik</td>
                          <td>100</td>
@@ -80,6 +96,7 @@
                          </td>
                      </tr>
                      <tr>
+                         <td>2</td>
                          <td>Tiger Nixon</td>
                          <td>System Architect</td>
                          <td>Edinburgh</td>

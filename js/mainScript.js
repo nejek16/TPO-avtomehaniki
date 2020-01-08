@@ -13,6 +13,11 @@
 	});
 	//povezava
 	connection.connect(function(err){
+		if(err) {
+            console.log('Not connected '.red, err.toString().red, ' RETRYING...'.blue);
+            d.reject();
+        }
+
 		if(document.getElementById("loginSite")!=null){
 			if(err){ console.log(error.code);document.getElementById("connectionStatus").innerHTML = "Napaka v povezavi.";}
 				else{
@@ -419,7 +424,80 @@
 			}
 		});
 	}
+
+	function getUsers() {
+		var query = "SELECT ID_USER, USERNAME, PASSWORD, FULL_NAME, SKLADISCNIK FROM uporabnik";
+		var hits;
+		var table =  $('.table').DataTable();
+		table.clear().draw();
+		connection.query(query, function(err, results) {
+			if (err) {console.log(err);}
+			else {
+				hits = JSON.parse(JSON.stringify(results));
+				for (var i = 0; i<hits.length;i++) {
+					table.row.add([hits[i].ID_USER, hits[i].USERNAME, hits[i].PASSWORD, hits[i].FULL_NAME, hits[i].SKLADISCNIK, "<button onclick=\"deleteUser(this)\" class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"]).draw(false);
+				}
+			}
+		});
+	}
 	
+	//dodaj uporabnika
+	function addUserPotrdi() {
+		var username = document.getElementById("username").value;
+		var password = document.getElementById("password").value;
+		var fullName = document.getElementById("name").value;
+		var skladiscnik = (document.getElementById("skladiscnik").checked) ? 1 : 0;
+
+		// preveri če uporabnik že obstaja
+		var query = "SELECT ID_USER, USERNAME, PASSWORD, FULL_NAME, SKLADISCNIK FROM uporabnik WHERE USERNAME = '" + username + "'";
+		var hits;
+		connection.query(query, function(err, results) {
+			if (err) {console.log(err);}
+			else {
+				hits = JSON.parse(JSON.stringify(results));
+				
+				if (hits.length > 0) {
+					alert("Uporabnik s tem uporabniškim imenom že obstaja!");
+					return;
+				}
+
+				var query = "INSERT INTO uporabnik (USERNAME, PASSWORD, FULL_NAME, SKLADISCNIK) values ('"+username+"','"+password+"','"+fullName+"',"+skladiscnik+")";
+				connection.query(query, function(err, results){
+					if(err){console.log(err);}
+					else{
+						alert("Uporabnik je uspešno dodan.");
+						getUsers();
+						
+						document.getElementById("username").value = "";
+						document.getElementById("password").value = "";
+						document.getElementById("name").value = "";
+						document.getElementById("skladiscnik").checked = false;
+					}
+				});
+			}
+		});
+
+		// prevent page refresh
+		return false;
+	}
+
+	//briši uporabnika
+	function deleteUser(e){
+		if (confirm('Ali res želite izbrisati uporabnika?')) {		
+			var table = $('.table').DataTable();
+			var data = table.row( $(e).parents('tr') ).data();
+			var query = "DELETE FROM uporabnik WHERE ID_USER = " + data[0];
+			connection.query(query, function(err, results){
+				if(err){console.log(err);}
+				else{
+					getUsers();
+				}
+			});
+		} else {
+
+		}
+	}
+
 	//bazo sm mal popravu, da se v primeru deleta naročila izbriše tudi v tabeli narocil, dodal še 1 boolean za naročila k je manjkal
 	//TODO še en gumb v skladiscnikNarocila za Naročena
 	//TODO pri skladiscniku še eno okno za pregled nad uporabniki, dodajanje uporabnikov, update in delete
