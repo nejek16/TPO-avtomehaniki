@@ -241,6 +241,7 @@
 		var hits;
 		var row;
 		var cell;
+		var statusOrder;
 		var table = document.getElementById("narocila");
 		connection.query(query, function(err, results){
 			if(err){console.log(err);}
@@ -268,7 +269,7 @@
 					else if(flagOrdered == 1){statusOrder = "Naročeno";}
 					else if(flagRequested == 1){statusOrder = "Zahtevano";}
 					cell = row.insertCell(2);
-					cell.innerHTML = status;
+					cell.innerHTML = statusOrder;
 					cell = row.insertCell(3);
 					cell.innerHTML = "<button onclick=\"cancelOrder(this);\" class=\"btn btn-outline-danger\">PREKLIČI</button>"
 					cell = row.insertCell(4);
@@ -352,7 +353,7 @@
 				cell.className += "sorting_1";
 				cell.innerHTML = hits[i].PARTNUMBER;
 				cell = row.insertCell(1);
-				cell.innerHTML = hits[i].PARTNUMBER;
+				cell.innerHTML = hits[i].PARTNAME;
 				var flagOrdered = hits[i].ORDERED;
 				var flagArrived = hits[i].ARRIVED;
 				var flagCancelled = hits[i].CANCELLED;
@@ -385,11 +386,11 @@
 				cell.className += "sorting_1";
 				cell.innerHTML = hits[i].PARTNUMBER;
 				cell = row.insertCell(1);
-				cell.innerHTML = hits[i].PARTNUMBER;
+				cell.innerHTML = hits[i].PARTNAME;
 				cell = row.insertCell(2);
 				cell.innerHTML = "Zahtevano";
 				cell = row.insertCell(3);
-				cell.innerHTML = "<button onclick=\"onClickNarocila();\" class=\"btn btn-outline-danger\">POTRDI</button>"
+				cell.innerHTML = "<button onclick=\"onClickNarocila(this);\" class=\"btn btn-outline-success\">POTRDI</button>"
 				cell = row.insertCell(4);
 				cell.innerHTML = hits[i].ID_ORDER;
 				cell.style.display = 'none';
@@ -413,10 +414,12 @@
 				cell.className += "sorting_1";
 				cell.innerHTML = hits[i].PARTNUMBER;
 				cell = row.insertCell(1);
-				cell.innerHTML = hits[i].PARTNUMBER;
+				cell.innerHTML = hits[i].PARTNAME;
 				cell = row.insertCell(2);
 				cell.innerHTML = "Naročeno";
 				cell = row.insertCell(3);
+				cell.innerHTML = "<button onclick=\"onClickNarocila(this);\" class=\"btn btn-outline-success\">POTRDI</button>"
+				cell = row.insertCell(4);
 				cell.innerHTML = hits[i].ID_ORDER;
 				cell.style.display = 'none';
 			}
@@ -439,11 +442,11 @@
 				cell.className += "sorting_1";
 				cell.innerHTML = hits[i].PARTNUMBER;
 				cell = row.insertCell(1);
-				cell.innerHTML = hits[i].PARTNUMBER;				
+				cell.innerHTML = hits[i].PARTNAME;				
 				cell = row.insertCell(2);
 				cell.innerHTML = "Preklicano";
 				cell = row.insertCell(3);
-				cell.innerHTML = "<button onclick=\"onClickNarocila();\" class=\"btn btn-outline-danger\">POTRDI</button>"
+				cell.innerHTML = "<button onclick=\"onClickNarocila(this);\" class=\"btn btn-outline-danger\">POTRDI</button>"
 				cell = row.insertCell(4);
 				cell.innerHTML = hits[i].ID_ORDER;
 				cell.style.display = 'none';
@@ -467,11 +470,11 @@
 				cell.className += "sorting_1";
 				cell.innerHTML = hits[i].PARTNUMBER;
 				cell = row.insertCell(1);
-				cell.innerHTML = hits[i].PARTNUMBER;				
+				cell.innerHTML = hits[i].PARTNAME;				
 				cell = row.insertCell(2);
 				cell.innerHTML = "Prispelo";
 				cell = row.insertCell(3);
-				cell.innerHTML = "<button onclick=\"onClickNarocila();\" class=\"btn btn-outline-danger\">POTRDI</button>"
+				cell.innerHTML = "<button onclick=\"onClickNarocila(this);\" class=\"btn btn-outline-success\">POTRDI</button>"
 				cell.style.display = 'none';
 				cell = row.insertCell(4);
 				cell.innerHTML = hits[i].ID_ORDER;
@@ -480,8 +483,32 @@
 		});		
 	}
 	//preklopi med stanji naročil
-	function onClickNarocila(){
-		console.log("TODO");
+	function onClickNarocila(e){
+		var partnumber,partname,statusOrder,orderID;
+		var table = document.getElementById('narocila');
+		var rowId = e.parentNode.parentNode.rowIndex;
+		var rowSelected = table.getElementsByTagName('tr')[rowId-1];
+		partname = rowSelected.cells[1].innerHTML;
+		partnumber = rowSelected.cells[0].innerHTML;
+		statusOrder = rowSelected.cells[2].innerHTML;
+		orderID = rowSelected.cells[4].innerHTML;
+		//console.log(partname+"|"+partnumber+"|"+statusOrder+"|"+orderID);
+		var query;
+		switch(statusOrder){
+			case "Preklicano":query = "DELETE FROM narocilo WHERE ID_ORDER = "+orderID;break;
+			case "Zahtevano":query = "UPDATE narocilo SET REQUESTED = 0, ORDERED = 1 WHERE ID_ORDER = "+orderID;break;
+			case "Naročeno":query = "UPDATE narocilo SET ORDERED = 0, ARRIVED = 1 WHERE ID_ORDER = "+orderID;break;
+		}
+		connection.query(query, function(err, results){
+			if(err){console.log(err);}
+			else{
+				switch(statusOrder){
+					case "Preklicano":getCancelledOrders();break;
+					case "Zahtevano":getNewOrders();break;
+					case "Naročeno":getOrderedOrders();break;
+				}
+			}
+		});
 	}
 	//bazo sm mal popravu, da se v primeru deleta naročila izbriše tudi v tabeli narocil, in v primeru artikla, da se zbriše poraba... to bom probu nekako spelat, da ostane sam dvomim
 	// dodal še 1 boolean za naročila k je manjkal
