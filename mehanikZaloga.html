@@ -103,12 +103,12 @@ $('#narocila').click(function(){
 function completeGrid(){
         $('.table').DataTable({
       //disable sorting on last column
-
       "columnDefs": [
         { "orderable": false, "targets": 3 }
       ],
       "lengthChange": false,
-      "bPaginate": false
+      "bPaginate": true,
+	  "pageLength":9
     })  
 }
 
