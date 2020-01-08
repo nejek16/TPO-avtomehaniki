@@ -259,24 +259,12 @@
 		var row;
 		var cell;
 		var statusOrder;
-		var table = document.getElementById("narocila");
+		var table = $('.table').DataTable();
 		connection.query(query, function(err, results){
 			if(err){console.log(err);}
 			else{
 				hits = JSON.parse(JSON.stringify(results));
 				for(var i = 0; i<hits.length;i++){
-					row = table.insertRow(0);
-					row.setAttribute("role", "row");
-					if(i%2==0){
-						row.className += "even";
-					}else{
-						row.className += "odd";
-					}					
-					cell = row.insertCell(0);
-					cell.className += "sorting_1";
-					cell.innerHTML = hits[i].PARTNUMBER;
-					cell = row.insertCell(1);
-					cell.innerHTML = hits[i].PARTNAME;
 					var flagOrdered = hits[i].ORDERED;
 					var flagArrived = hits[i].ARRIVED;
 					var flagCancelled = hits[i].CANCELLED;
@@ -284,14 +272,8 @@
 					if(flagArrived == 1){statusOrder = "Prispelo";}
 					else if(flagCancelled == 1){statusOrder = "Preklicano";}
 					else if(flagOrdered == 1){statusOrder = "Naročeno";}
-					else if(flagRequested == 1){statusOrder = "Zahtevano";}
-					cell = row.insertCell(2);
-					cell.innerHTML = statusOrder;
-					cell = row.insertCell(3);
-					cell.innerHTML = "<button onclick=\"cancelOrder(this);\" class=\"btn btn-outline-danger\">PREKLIČI</button>"
-					cell = row.insertCell(4);
-					cell.innerHTML = hits[i].ID_ORDER;
-					cell.style.display = 'none';
+					else if(flagRequested == 1){statusOrder = "Zahtevano";}						
+					table.row.add([hits[i].PARTNUMBER, hits[i].PARTNAME,statusOrder,"<button onclick=\"cancelOrder(this);\" class=\"btn btn-outline-danger\">PREKLIČI</button>",hits[i].ID_ORDER]).draw(false);
 				}
 			}
 		});		
@@ -528,13 +510,10 @@
 		});
 	}
 	
-	//bazo sm mal popravu, da se v primeru deleta naročila izbriše tudi v tabeli narocil, in v primeru artikla, da se zbriše poraba... to bom probu nekako spelat, da ostane sam dvomim
-	// dodal še 1 boolean za naročila k je manjkal
-	//TODO še en gumb v skladiscnikNarocila za Naročena - getOrderedOrders
-	//TODO v mehanik zalogi, ko pritisneš za prevzem - popup window, kjer vneseš željeno količino in vpis v porabil
-	//TODO nekako spravit search da bo delal in tisto štetje kok itemov je v tabeli oziroma izbrisat vn v najslabšem primeru (cant be broken if it isnt there)
+	//bazo sm mal popravu, da se v primeru deleta naročila izbriše tudi v tabeli narocil, dodal še 1 boolean za naročila k je manjkal
+	//TODO še en gumb v skladiscnikNarocila za Naročena
 	//TODO pri skladiscniku še eno okno za pregled nad uporabniki, dodajanje uporabnikov, update in delete
 	//TODO skladiscikZaloga - polje za dodat nov item
-	//TODO skladiscnikZaloga - pri DODAJ - popup za vnos nove količine
+	
 	
 	
