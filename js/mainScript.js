@@ -427,7 +427,6 @@
 	//bazo sm mal popravu, da se v primeru deleta naročila izbriše tudi v tabeli narocil, dodal še 1 boolean za naročila k je manjkal
 	//TODO še en gumb v skladiscnikNarocila za Naročena
 	//TODO pri skladiscniku še eno okno za pregled nad uporabniki, dodajanje uporabnikov, update in delete
-	//TODO skladiscikZaloga - polje za dodat nov item
 	
 	
 	
