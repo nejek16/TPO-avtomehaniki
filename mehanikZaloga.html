@@ -26,6 +26,31 @@
 </head>
 
 <body onload="getZalogaFix();">
+	<div class="container">
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Prevzemi artikel</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<p id="enterTextModal">Vnesi željeno količino</p>
+						<input id="prevzemiZalogo"  type="number" class="form-control" min="0">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Prekliči</button>
+						<button id="btn-DodajZalogo" type="button" class="btn btn-success" onclick="prevzemZalogePotrdi();">Prevzemi</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
 	<div class="container p-3">
 		<div class="row">
 			<div id = narocila class="col-sm-4 text-left">
@@ -86,6 +111,17 @@ function completeGrid(){
       "bPaginate": false
     })  
 }
+
+$(document).on('keyup', 'input[id=prevzemiZalogo]', function () {
+    var _this = $(this);
+    var min = parseInt(_this.attr('min')); // if min attribute is not defined, 1 is default
+    var max = parseInt(_this.attr('max')); // if max attribute is not defined, 100 is default
+    var val = parseInt(_this.val()) || (min - 1); // if input char is not a number the value will be (min - 1) so first condition will be true
+    if(val < min)
+        _this.val( min );
+    if(val > max)
+        _this.val( max );
+});
 completeGrid()
 </script>
 </html> 

@@ -1,6 +1,8 @@
 	//variabli, ki jih rabiš v več ku 1 funkciji
 	var username;
 	var userID;
+	var selectedID;
+	var selectedSupply;
 	var mysql = require('mysql');
 	//spremeni glede na svoje nastavitve
 	var connection = mysql.createConnection({
@@ -93,14 +95,34 @@
 			else{
 				hits = JSON.parse(JSON.stringify(results));
 				for(var i = 0; i<hits.length;i++){
-					table.row.add([hits[i].PARTNAME,hits[i].PARTNUMBER,hits[i].SUPPLY,hits[i].ID_ITEM,"<button onclick=\"updateZaloga()\" class=\"btn btn-outline-success\">DODAJ</button>","<button onclick=\"deleteZaloga(this)\" class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"]).draw(false);
+					table.row.add([hits[i].PARTNAME,hits[i].PARTNUMBER,hits[i].SUPPLY,hits[i].ID_ITEM,"<button onclick=\"updateZaloga(this)\" class=\"btn btn-outline-success\">DODAJ</button>","<button onclick=\"deleteZaloga(this)\" class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"]).draw(false);
 				}
 			}
 		});
 	}
-	//updati zalogo NEEDSFIX
-	function updateZaloga(){
-		console.log("UPDATE");
+	//odpri modal za dodajanje KONČANO
+	function updateZaloga(e){
+		var table = $('.table').DataTable();
+		var data = table.row( $(e).parents('tr') ).data();
+		console.log(data);
+		var modal = $("#myModal").modal();
+		selectedSupply = data[2];
+		selectedID = data[3];
+		console.log(selectedSupply+" supply|"+selectedID);
+	}
+	//update shramba z novo vrednostjo KONČANO
+	function updateZalogaPotrdi(){
+		var dodaj = document.getElementById("dodajZalogo").value;
+		selectedSupply = selectedSupply + dodaj;
+		var query = "UPDATE shramba SET SUPPLY = "+selectedSupply+" WHERE ID_ITEM = "+selectedID;
+		console.log(query);
+		connection.query(query,function(err, results){
+			if(err){console.log(err);}
+			else{
+				$('#myModal').modal('hide');
+				getZalogaSklad();
+			}
+		});
 	}
 	//briši item
 	function deleteZaloga(e){
@@ -118,7 +140,7 @@
 			console.log("SKIP THIS SHIT");
 		}
 	}
-	//zaloga skladiščnik, kjer je SUPPLY = 0   NEEDSFIX
+	//zaloga skladiščnik, kjer je SUPPLY = 0   KONČANO
 	function getEmptyItems(){
 		var query = "select ID_ITEM, PARTNAME, PARTNUMBER, SUPPLY FROM shramba WHERE SUPPLY = 0";
 		var hits;
@@ -160,12 +182,50 @@
 	}
 	
 	
-	//prevzem zaloge NEEDSFIX
+	//prevzem zaloge odpre modal
 	function prevzemZaloge(e){
 		var table = $('.table').DataTable();
 		var data = table.row( $(e).parents('tr') ).data();
 		console.log(data);
-		
+		var modal = $("#myModal").modal();
+		var setLimit = document.getElementById("prevzemiZalogo");
+		selectedSupply = data[2];
+		selectedID = data[4]
+		console.log(selectedSupply+"|"+selectedID);
+		setLimit.max = selectedSupply;		
+	}
+	//prevzem zaloge queryi v bazo
+	function prevzemZalogePotrdi(){
+		var prevzem = document.getElementById("prevzemiZalogo").value;
+		if(prevzem != 0){
+			var date;
+			date = new Date();
+			date = date.getUTCFullYear() + '-' +
+			('00' + (date.getUTCMonth()+1)).slice(-2) + '-' +
+			('00' + date.getUTCDate()).slice(-2) + ' ' + 
+			('00' + date.getUTCHours()).slice(-2) + ':' + 
+			('00' + date.getUTCMinutes()).slice(-2) + ':' + 
+			('00' + date.getUTCSeconds()).slice(-2);
+			console.log(date);
+			selectedSupply = selectedSupply - prevzem;
+			var query = "UPDATE shramba SET SUPPLY = "+selectedSupply+" WHERE ID_ITEM = "+selectedID;
+			var query2 = "INSERT INTO porabil (ID_ITEM, ID_USER, DATE, KOLICINA) VALUES ("+selectedID+","+userID+",'"+date+"',"+prevzem+")";
+			console.log(query2);
+			console.log(prevzem);
+			console.log(query);
+			connection.query(query, function(err, results){
+				if(err){console.log(err);}
+				else{
+					connection.query(query2, function(err, results){
+						if(err){console.log(err);}
+						else{
+							$('#myModal').modal('hide');
+							getZalogaFix();
+						}
+					});
+				}
+			});
+		}
 	}
 	//mehanik narocila od določenega uporabnika KONČANO
 	function getNarocila(){
@@ -196,7 +256,7 @@
 			}
 		});		
 	}
-	//prekliči naročilo NEEDSFIX
+	//prekliči naročilo KONČANO
 	function cancelOrder(e){
 		var partnumber,partname,statusOrder,orderID;
 		var table = document.getElementById('narocila');
@@ -217,7 +277,7 @@
 		});		
 	}
 	
-	//vstavi novo naročilo in poveži naročilo z uporabnikom NEEDSFIX
+	//vstavi novo naročilo in poveži naročilo z uporabnikom KONČANO
 	function sendNarocilo(){
 		var orderID;
 		var partNumber = document.getElementById("stDela").value;
