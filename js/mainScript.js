@@ -91,6 +91,23 @@
 			}
 		});
 	}
+	
+	function getZalogaFix(){
+		var query = "select ID_ITEM, PARTNAME, PARTNUMBER, SUPPLY from shramba";
+		var hits;
+		var row;
+		var cell;
+		var table = $('.table').DataTable();
+		connection.query(query, function(err, results){
+			if(err){console.log(err);}
+			else{
+				hits = JSON.parse(JSON.stringify(results));
+				for(var i = 0; i<hits.length;i++){
+					table.row.add([hits[i].PARTNAME,hits[i].PARTNUMBER,hits[i].SUPPLY,"<button onclick=\"prevzemZaloge(this);\" class=\"btn btn-outline-success\">PREVZEM</button>",hits[i].ID_ITEM]).draw(false);
+				}
+			}
+		});
+	}
 	//zaloga skladiščnik KONČANO
 	function getZalogaSklad(){
 		clearTable("zalogca");
@@ -510,6 +527,7 @@
 			}
 		});
 	}
+	
 	//bazo sm mal popravu, da se v primeru deleta naročila izbriše tudi v tabeli narocil, in v primeru artikla, da se zbriše poraba... to bom probu nekako spelat, da ostane sam dvomim
 	// dodal še 1 boolean za naročila k je manjkal
 	//TODO še en gumb v skladiscnikNarocila za Naročena - getOrderedOrders
