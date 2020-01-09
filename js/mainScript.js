@@ -111,13 +111,13 @@
 		var data = table.row( $(e).parents('tr') ).data();
 		console.log(data);
 		var modal = $("#myModal").modal();
-		selectedSupply = data[2];
-		selectedID = data[3];
+		selectedSupply = parseInt(data[2]);
+		selectedID = parseInt(data[3]);
 		console.log(selectedSupply+" supply|"+selectedID);
 	}
 	//update shramba z novo vrednostjo KONČANO
 	function updateZalogaPotrdi(){
-		var dodaj = document.getElementById("dodajZalogo").value;
+		var dodaj = parseInt(document.getElementById("dodajZalogo").value);
 		selectedSupply = selectedSupply + dodaj;
 		var query = "UPDATE shramba SET SUPPLY = "+selectedSupply+" WHERE ID_ITEM = "+selectedID;
 		console.log(query);
@@ -404,13 +404,11 @@
 	//preklopi med stanji naročil NEESSFIX
 	function onClickNarocila(e){
 		var partnumber,partname,statusOrder,orderID;
-		var table = document.getElementById('narocila');
-		var rowId = e.parentNode.parentNode.rowIndex;
-		var rowSelected = table.getElementsByTagName('tr')[rowId-1];
-		partname = rowSelected.cells[1].innerHTML;
-		partnumber = rowSelected.cells[0].innerHTML;
-		statusOrder = rowSelected.cells[2].innerHTML;
-		orderID = rowSelected.cells[4].innerHTML;
+		var table = $('.table').DataTable();
+		var data = table.row( $(e).parents('tr') ).data();	
+		var statusOrder = data[2];
+		console.log(data);
+		var orderID = data[4];
 		//console.log(partname+"|"+partnumber+"|"+statusOrder+"|"+orderID);
 		var query;
 		switch(statusOrder){
