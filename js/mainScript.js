@@ -310,6 +310,7 @@
 		getNarocila();
 		$('#myModal').modal('hide');
 	}
+	
 	//pregled naročil VSA
 	function getAllOrders(){
 		var query = "SELECT ID_ORDER, PARTNUMBER, PARTNAME, REQUESTED, ORDERED, ARRIVED, CANCELLED FROM narocilo";
@@ -318,7 +319,7 @@
 		var hits;
 		var table = $('.table').DataTable();
 		table.clear().draw();
-		document.getElementById("buttonPotrdi").style.display = 'none';
+		table.column([3]).visible(false);
 		connection.query(query, function(err, results){
 			hits = JSON.parse(JSON.stringify(results));
 			for(var i = 0; i<hits.length;i++){
@@ -331,10 +332,10 @@
 				else if(flagCancelled == 1){statusOrder = "Preklicano";}
 				else if(flagOrdered == 1){statusOrder = "Naročeno";}
 				else if(flagRequested == 1){statusOrder = "Zahtevano";}
-				table.row.add([hits[i].PARTNUMBER,hits[i].PARTNAME,statusOrder,statusOrder]).draw(false);
-				
+				table.row.add([hits[i].PARTNUMBER,hits[i].PARTNAME,statusOrder,""]).draw(false);				
 			}
 		});
+		
 	}
 	//pregled naročil NOVA
 	function getNewOrders(){
@@ -344,6 +345,7 @@
 		var hits;
 		var table =  $('.table').DataTable();
 		table.clear().draw();
+		table.column([3]).visible(true);
 		connection.query(query, function(err, results){
 			hits = JSON.parse(JSON.stringify(results));
 			for(var i = 0; i<hits.length;i++){
@@ -359,6 +361,7 @@
 		var hits;
 		var table = $('.table').DataTable();
 		table.clear().draw();
+		table.column([3]).visible(true);
 		connection.query(query, function(err, results){
 			hits = JSON.parse(JSON.stringify(results));
 			for(var i = 0; i<hits.length;i++){
@@ -374,6 +377,7 @@
 		var hits;
 		var table = $('.table').DataTable();
 		table.clear().draw();
+		table.column([3]).visible(true);
 		connection.query(query, function(err, results){
 			hits = JSON.parse(JSON.stringify(results));
 			for(var i = 0; i<hits.length;i++){
@@ -389,10 +393,11 @@
 		var hits;
 		var table = $('.table').DataTable();
 		table.clear().draw();
+		table.column([3]).visible(false);
 		connection.query(query, function(err, results){
 			hits = JSON.parse(JSON.stringify(results));
 			for(var i = 0; i<hits.length;i++){
-				table.row.add([hits[i].PARTNUMBER,hits[i].PARTNAME,"Prispelo","<button onclick=\"onClickNarocila(this);\" class=\"btn btn-outline-success\">POTRDI</button>",hits[i].ID_ORDER]).draw(false);
+				table.row.add([hits[i].PARTNUMBER,hits[i].PARTNAME,"Prispelo","<button style=\"display:none\" onclick=\"onClickNarocila(this);\" class=\"btn btn-outline-success\">POTRDI</button>",hits[i].ID_ORDER]).draw(false);
 			}
 		});		
 	}

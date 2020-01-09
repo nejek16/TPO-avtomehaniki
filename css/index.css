@@ -127,3 +127,18 @@ label {
     border: 5px solid #1C6EA4 !important;
     border-radius: 12px !important;
 }
+
+a {
+  cursor: pointer;
+  font: bold 12px Arial;
+  background-color: #EEEEEE;
+  color:#007bff;
+  padding: 2px 6px 2px 6px;
+  border-top: 1px solid #007bff;
+  border-right: 1px solid #007bff;
+  border-bottom: 1px solid #007bff;
+  border-left: 1px solid #007bff;
+  border-radius:3px;
+  margin-left: 3px;
+  margin-right: 3px;
+}
