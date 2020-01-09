@@ -1,22 +1,25 @@
-	//variabli, ki jih rabiš v več ku 1 funkciji
-	var username;
-	var userID;
-	var selectedID;
-	var selectedSupply;
-	var mysql = require('mysql');
-	//spremeni glede na svoje nastavitve
-	var connection = mysql.createConnection({
-		host: 'localhost',
-		user: 'root',
-		password: '123456789',
-		database: 'storage'
-	});
-	//povezava
-	connection.connect(function(err){
-		if(err) {
-            console.log('Not connected '.red, err.toString().red, ' RETRYING...'.blue);
-            d.reject();
-        }
+//variabli, ki jih rabiš v več ku 1 funkciji
+var username;
+var userID;
+var selectedID;
+var selectedSupply;
+var mysql = require('mysql');
+//spremeni glede na svoje nastavitve
+var connection = mysql.createConnection({
+	host: 'localhost',
+	user: 'root',
+	password: '123456789',
+	database: 'storage'
+});
+
+var shramba = [];
+
+//povezava
+connection.connect(function (err) {
+	if (err) {
+		console.log('Not connected '.red, err.toString().red, ' RETRYING...'.blue);
+		d.reject();
+	}
 
 		if(document.getElementById("loginSite")!=null){
 			if(err){ console.log(error.code);document.getElementById("connectionStatus").innerHTML = "Napaka v povezavi.";}
@@ -100,22 +103,65 @@
 			else{
 				hits = JSON.parse(JSON.stringify(results));
 				for(var i = 0; i<hits.length;i++){
-					table.row.add([hits[i].PARTNAME,hits[i].PARTNUMBER,hits[i].SUPPLY,hits[i].ID_ITEM,"<button onclick=\"updateZaloga(this)\" class=\"btn btn-outline-success\">DODAJ</button>","<button onclick=\"deleteZaloga(this)\" class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"]).draw(false);
+					table.row.add([hits[i].PARTNAME,hits[i].PARTNUMBER,hits[i].SUPPLY,hits[i].ID_ITEM,"<button onclick=\"updateZaloga(this)\" class=\"btn btn-outline-success\">SPREMENI</button>","<button onclick=\"deleteZaloga(this)\" class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"]).draw(false);
 				}
 			}
 		});
 	}
 	
 	function addItemZaloga(){
-		var partName = document.getElementById("itemName").value;
-		var partNumber = document.getElementById("itemNumber").value;
+		var partName = document.getElementById("imeDela").value;
+		var partNumber = document.getElementById("stDela").value;
 		var partSupply = document.getElementById("itemSupply").value;
-		var query = "INSERT INTO shramba (PARTNAME, PARTNUMBER, SUPPLY) VALUES ('"+partName+"','"+partNumber+"',"+partSupply+")";
-		console.log(query);		
+
+		if (partName.length === 0) {
+			alert("Vnesi ime artikla!");
+			return;
+		}
+
+		if (isNaN(partNumber)) {
+			alert("Številka artikla vsebuje prepovedane znake!");
+			return;
+		}
+
+		if (partNumber.length === 0) {
+			alert("Vnesi številko artikla!");
+			return;
+		}
+
+		if (!partSupply || partSupply === 0 || partSupply < 0) {
+			alert("Vnesi količino!");
+			return;
+		}
+
+		var query = "select ID_ITEM, PARTNAME, PARTNUMBER, SUPPLY from shramba WHERE PARTNUMBER =" + partNumber;
+		var hits;
 		connection.query(query, function(err,results){
 			if(err){console.log(err);}
-			else{
-				getZalogaSklad();
+			else {
+				hits = JSON.parse(JSON.stringify(results));
+				if (hits.length > 0) {
+					var supply = parseInt(hits[0].SUPPLY) + parseInt(partSupply);
+					var query = "UPDATE shramba SET SUPPLY = "+ supply +" WHERE PARTNUMBER = " + partNumber;
+					connection.query(query ,function(err, results){
+						if(err) {
+							console.log(err);
+						}
+						else {
+							getZalogaSklad();
+						}
+					});
+				}
+				else {
+					var query = "INSERT INTO shramba (PARTNAME, PARTNUMBER, SUPPLY) VALUES ('"+partName+"','"+partNumber+"',"+partSupply+")";
+					console.log(query);
+					connection.query(query, function(err,results){
+						if(err){console.log(err);}
+						else{
+							getZalogaSklad();
+						}
+					});
+				}
 			}
 		});
 	}
@@ -129,10 +175,16 @@
 		selectedID = parseInt(data[3]);
 		console.log(selectedSupply+" supply|"+selectedID);
 	}
+
 	//update shramba z novo vrednostjo KONČANO
 	function updateZalogaPotrdi(){
 		var dodaj = parseInt(document.getElementById("dodajZalogo").value);
 		selectedSupply = selectedSupply + dodaj;
+
+		if (selectedSupply < 0) {
+			selectedSupply = 0;
+		}
+
 		var query = "UPDATE shramba SET SUPPLY = "+selectedSupply+" WHERE ID_ITEM = "+selectedID;
 		console.log(query);
 		connection.query(query,function(err, results){
@@ -297,7 +349,7 @@
 		console.log(partNumber+" | "+partName);
 		var query = "INSERT INTO narocilo (PARTNUMBER,PARTNAME,REQUESTED,ORDERED,ARRIVED,CANCELLED) VALUES('"+partNumber+"','"+partName+"',1,0,0,0)";
 		console.log(query);
-		var query2 = "SELECT ID_ORDER FROM narocilo ORDER BY ID_ORDER DESC LIMIT 1";		
+		var query2 = "SELECT ID_ORDER FROM narocilo ORDER BY ID_ORDER DESC LIMIT 1";	
 		connection.query(query, function(err, results){
 			if(err){console.log(err);}
 			else{
@@ -547,9 +599,116 @@
 		}
 	}
 
-	//bazo sm mal popravu, da se v primeru deleta naročila izbriše tudi v tabeli narocil, dodal še 1 boolean za naročila k je manjkal
-	//TODO še en gumb v skladiscnikNarocila za Naročena
-	//TODO pri skladiscniku še eno okno za pregled nad uporabniki, dodajanje uporabnikov, update in delete
-	
-	
-	
+// zaloga skladiščnik KONČANO
+function loadItemsFromShramba() {
+	var query = "select ID_ITEM, PARTNAME, PARTNUMBER from shramba";
+	var hits;
+	var row;
+	var cell;
+	var table = $('.table').DataTable();
+	table.clear().draw();
+	connection.query(query, function (err, results) {
+		if (err) { console.log(err); }
+		else {
+			hits = JSON.parse(JSON.stringify(results));
+			for (var i = 0; i < hits.length; i++) {
+				shramba.push({id: hits[i].ID_ITEM, partName: hits[i].PARTNAME, partNumber: hits[i].PARTNUMBER});				
+			}
+		}
+
+		autocomplete("imeDela");
+		autocomplete("stDela");
+	});
+}
+
+function autocomplete(elementId) {
+	var arr;
+	var inp;
+	var second;
+
+	if (elementId === "imeDela") {
+		arr = shramba.map(a => a.partName);
+		inp = document.getElementById("imeDela");
+		second = document.getElementById("stDela");
+	}
+	else if (elementId === "stDela") {
+		arr = shramba.map(a => a.partNumber);
+		inp = document.getElementById("stDela");
+		second = document.getElementById("imeDela");
+	}
+
+	var currentFocus;
+	inp.addEventListener("input", function(e) {
+		var a, b, i, val = this.value;
+		closeAllLists();
+		if (!val) { return false;}
+		currentFocus = -1;
+		a = document.createElement("DIV");
+		a.setAttribute("id", this.id + "autocomplete-list");
+		a.setAttribute("class", "autocomplete-items");
+		this.parentNode.appendChild(a);
+		for (i = 0; i < arr.length; i++) {
+			if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+			b = document.createElement("DIV");
+			b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+			b.innerHTML += arr[i].substr(val.length);
+			b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+				b.addEventListener("click", function(e) {
+				inp.value = this.getElementsByTagName("input")[0].value;
+				
+				if (elementId === "imeDela") {
+					const filtered = shramba.filter(r => r.partName === inp.value)[0];
+					second.value = filtered.partNumber;
+				}
+				else if (elementId === "stDela") {
+					const filtered = shramba.filter(r => r.partNumber === inp.value)[0];
+					second.value = filtered.partName;
+				}
+				
+				closeAllLists();
+			});
+			a.appendChild(b);
+			}
+		}
+	});
+	inp.addEventListener("keydown", function(e) {
+		var x = document.getElementById(this.id + "autocomplete-list");
+		if (x) x = x.getElementsByTagName("div");
+		if (e.keyCode == 40) {
+			currentFocus++;
+			addActive(x);
+		} else if (e.keyCode == 38) { //up
+			currentFocus--;
+			addActive(x);
+		} else if (e.keyCode == 13) {
+			e.preventDefault();
+			if (currentFocus > -1) {
+			if (x) x[currentFocus].click();
+			}
+		}
+	});
+	function addActive(x) {
+		if (!x) return false;
+		removeActive(x);
+		if (currentFocus >= x.length) currentFocus = 0;
+		if (currentFocus < 0) currentFocus = (x.length - 1);
+		x[currentFocus].classList.add("autocomplete-active");
+	}
+	function removeActive(x) {
+		for (var i = 0; i < x.length; i++) {
+		x[i].classList.remove("autocomplete-active");
+		}
+	}
+	function closeAllLists(elmnt) {
+		var x = document.getElementsByClassName("autocomplete-items");
+		for (var i = 0; i < x.length; i++) {
+		if (elmnt != x[i] && elmnt != inp) {
+		x[i].parentNode.removeChild(x[i]);
+		}
+	}
+	}
+
+	document.addEventListener("click", function (e) {
+		closeAllLists(e.target);
+	});
+}

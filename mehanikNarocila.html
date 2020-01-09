@@ -25,7 +25,7 @@
 
 </head>
 
-<body onload="getNarocila();">
+<body onload="getNarocila(); loadItemsFromShramba();">
 	<div class="container">
 		<!-- Modal -->
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -39,7 +39,7 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<p>Naročilo za artikel vspešno oddano.</p>
+						<p>Naročilo za artikel uspešno oddano.</p>
 					</div>
 					<div class="modal-footer">
 						<button id="btn-DodajZalogo" type="button" class="btn btn-success" onclick="closeModal();">Zapri</button>
@@ -47,8 +47,8 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
+
 	<div class="container p-3">
 		<div class="row">
 			<div class="col-sm-4 text-left">
@@ -60,20 +60,24 @@
 				<button id="nazaj" type="submit" class="btn btn-outline-primary text-center align-middle">NAZAJ</button>
 			</div>
 		</div>
-        <div style="margin-bottom: 60px;"></div>
-        <div class="row">
-            <div class="col-sm-4 align-middle">
-                <label for="stDela">Številka dela</label>
-                <input type="text" class="form-control align-middle" id="stDela"  placeholder="Vnesi številko dela">
-            </div>
-            <div class="col-sm-4 align-middle">
-                <label for="imeDela">Ime dela</label>
-                <input type="text" class="form-control align-middle" id="imeDela" placeholder="Vnesi ime dela">
-            </div>
-            <div style="line-height:95px" class="col-sm-4 align-middle text-right">
-                <button onclick="sendNarocilo();" type="submit" class="btn btn-outline-success">NAROČI</button>
-            </div>
-        </div>
+		<br>
+		<hr>
+		<div style="margin-bottom: 60px;"></div>
+		<form autocomplete="off" id="narociDel">
+			<div class="row autocomplete">
+				<div class="col-sm-4 align-middle">
+					<label for="imeDela">Ime dela</label>
+					<input type="text" class="form-control align-middle" id="imeDela" placeholder="Vnesi ime dela">
+				</div>
+				<div class="col-sm-4 align-middle">
+					<label for="stDela">Številka dela</label>
+					<input type="text" class="form-control align-middle" id="stDela"  placeholder="Vnesi številko dela">
+				</div>
+				<div style="line-height:95px" class="col-sm-4 align-middle text-right">
+					<button onclick="sendNarocilo();" type="submit" class="btn btn-outline-success">NAROČI</button>
+				</div>
+			</div>
+		</form>
         <div style="margin-bottom: 30px;"></div>
 		<div class="row">
 		 <!-- Grid -->
@@ -98,6 +102,11 @@
 	</div>
 </body>
 <script>
+$("#narociDel").submit(function(e) {
+	e.preventDefault();
+	return false;
+});
+
 //Odjava
 $('#nazaj').click(function(){
         const ipcRenderer = require('electron').ipcRenderer;
