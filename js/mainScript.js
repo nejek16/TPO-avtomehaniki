@@ -435,7 +435,7 @@
 			else {
 				hits = JSON.parse(JSON.stringify(results));
 				for (var i = 0; i<hits.length;i++) {
-					table.row.add([hits[i].ID_USER, hits[i].USERNAME, hits[i].PASSWORD, hits[i].FULL_NAME, hits[i].SKLADISCNIK, "<button onclick=\"deleteUser(this)\" class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"]).draw(false);
+					table.row.add([hits[i].FULL_NAME, hits[i].USERNAME, hits[i].PASSWORD, hits[i].ID_USER, hits[i].SKLADISCNIK, "<button onclick=\"updateUser(this)\" class=\"btn btn-outline-success \">SPREMENI</button>","<button onclick=\"deleteUser(this)\" class=\"btn btn-outline-danger izbrisi\">IZBRIŠI</button>"]).draw(false);
 				}
 			}
 		});
@@ -479,6 +479,38 @@
 
 		// prevent page refresh
 		return false;
+	}
+	
+	function updateUser(e){
+		var table = $('.table').DataTable();
+		var data = table.row( $(e).parents('tr') ).data();
+		selectedID = data[3];
+		var modal = $("#myModal").modal();
+	}
+	
+	function updateUserPotrdi(){
+		var full_name = document.getElementById("spremeniFull_Name").value;
+		var username = document.getElementById("spremeniUsername").value;
+		var password = document.getElementById("spremeniPassword").value;
+		var skladiscnik = (document.getElementById("spremeniSkladiscnik").checked) ? 1 : 0;
+		console.log(full_name+"|"+username+"|"+password+"|"+skladiscnik);
+		var querySklad = "UPDATE uporabnik SET SKLADISCNIK = "+skladiscnik+" WHERE ID_USER = "+selectedID;
+		connection.query(querySklad, function(err, results){if(err){console.log(err)}});
+		var query;
+		if(full_name != ""){
+			query = "UPDATE uporabnik SET FULL_NAME = '"+full_name+"' WHERE ID_USER = "+selectedID;
+			connection.query(query, function(err, results){if(err){console.log(err);}});
+		}
+		if(username != ""){
+			query = "UPDATE uporabnik SET USERNAME = '"+username+"' WHERE ID_USER = "+selectedID;
+			connection.query(query, function(err, results){if(err){console.log(err);}});
+		}
+		if(password != ""){
+			query = "UPDATE uporabnik SET PASSWORD = '"+password+"' WHERE ID_USER = "+selectedID;
+			connection.query(query, function(err, results){if(err){console.log(err);}});
+		}
+		getUsers();
+		$('#myModal').modal('hide');
 	}
 
 	//briši uporabnika

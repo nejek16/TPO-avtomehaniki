@@ -22,7 +22,6 @@
 	<script>require( 'datatables.net-jqui' )( window, $ );</script>
 	
 	<script src="js/mainScript.js"></script>
-	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 
 </head>
 
@@ -112,7 +111,7 @@ function completeGrid(){
         { "orderable": false, "targets": 3 }
       ],
       "lengthChange": false,
-      "bPaginate": true,
+	  "paging":true,
 	  "pageLength":9
     })  
 }
