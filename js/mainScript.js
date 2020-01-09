@@ -105,6 +105,20 @@
 			}
 		});
 	}
+	
+	function addItemZaloga(){
+		var partName = document.getElementById("itemName").value;
+		var partNumber = document.getElementById("itemNumber").value;
+		var partSupply = document.getElementById("itemSupply").value;
+		var query = "INSERT INTO shramba (PARTNAME, PARTNUMBER, SUPPLY) VALUES ('"+partName+"','"+partNumber+"',"+partSupply+")";
+		console.log(query);		
+		connection.query(query, function(err,results){
+			if(err){console.log(err);}
+			else{
+				getZalogaSklad();
+			}
+		});
+	}
 	//odpri modal za dodajanje KONČANO
 	function updateZaloga(e){
 		var table = $('.table').DataTable();
