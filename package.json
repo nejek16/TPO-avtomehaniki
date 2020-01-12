@@ -1,10 +1,12 @@
 {
   "name": "skladisce",
+  "productName": "Skladisce",
   "version": "1.0.0",
   "description": "skladisce",
   "main": "index.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package-win": "electron-packager . skladisce --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds --version-string.ProductName=\"Skladisce\""
   },
   "keywords": [
     "skladisce",
@@ -13,7 +15,8 @@
   "author": "alot of peeps",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^7.1.7",
+    "electron": "^7.1.8",
+    "electron-packager": "^14.1.1",
     "typescript": "^2.8.3"
   },
   "dependencies": {
