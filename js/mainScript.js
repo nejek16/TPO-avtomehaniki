@@ -37,14 +37,12 @@ connection.connect(function (err) {
 		var pass = document.getElementById("pass").value;
 		var isSklad = null;
 		var checked = false;
-		//console.log(username+"|"+pass);
 		var query = "SELECT USERNAME, PASSWORD, SKLADISCNIK, ID_USER from uporabnik WHERE USERNAME like '"+username+"'";
 		connection.query(query, function(err, results){
 			if(err){console.log(err);}
 			else{
 				document.getElementById("connectionStatus").innerHTML ="Povezava vzpostavljena.";
 				users = JSON.parse(JSON.stringify(results));
-				console.log(results);
 				if(results.length>0){
 					if(users[0].USERNAME === username && users[0].PASSWORD === pass){
 						checked = true;
@@ -154,7 +152,6 @@ connection.connect(function (err) {
 				}
 				else {
 					var query = "INSERT INTO shramba (PARTNAME, PARTNUMBER, SUPPLY) VALUES ('"+partName+"','"+partNumber+"',"+partSupply+")";
-					console.log(query);
 					connection.query(query, function(err,results){
 						if(err){console.log(err);}
 						else{
@@ -169,11 +166,9 @@ connection.connect(function (err) {
 	function updateZaloga(e){
 		var table = $('.table').DataTable();
 		var data = table.row( $(e).parents('tr') ).data();
-		console.log(data);
 		var modal = $("#myModal").modal();
 		selectedSupply = parseInt(data[2]);
 		selectedID = parseInt(data[3]);
-		console.log(selectedSupply+" supply|"+selectedID);
 	}
 
 	//update shramba z novo vrednostjo KONČANO
@@ -186,7 +181,6 @@ connection.connect(function (err) {
 		}
 
 		var query = "UPDATE shramba SET SUPPLY = "+selectedSupply+" WHERE ID_ITEM = "+selectedID;
-		console.log(query);
 		connection.query(query,function(err, results){
 			if(err){console.log(err);}
 			else{
@@ -208,7 +202,7 @@ connection.connect(function (err) {
 				}
 			});
 		} else {
-			console.log("SKIP THIS SHIT");
+
 		}
 	}
 	//zaloga skladiščnik, kjer je SUPPLY = 0   KONČANO
@@ -257,12 +251,10 @@ connection.connect(function (err) {
 	function prevzemZaloge(e){
 		var table = $('.table').DataTable();
 		var data = table.row( $(e).parents('tr') ).data();
-		console.log(data);
 		var modal = $("#myModal").modal();
 		var setLimit = document.getElementById("prevzemiZalogo");
 		selectedSupply = data[2];
 		selectedID = data[4]
-		console.log(selectedSupply+"|"+selectedID);
 		setLimit.max = selectedSupply;		
 	}
 	//prevzem zaloge queryi v bazo
@@ -277,15 +269,12 @@ connection.connect(function (err) {
 			('00' + date.getUTCHours()).slice(-2) + ':' + 
 			('00' + date.getUTCMinutes()).slice(-2) + ':' + 
 			('00' + date.getUTCSeconds()).slice(-2);
-			console.log(date);
 			selectedSupply = selectedSupply - prevzem;
 			var query = "UPDATE shramba SET SUPPLY = "+selectedSupply+" WHERE ID_ITEM = "+selectedID;
 			var query2 = "INSERT INTO porabil (ID_ITEM, ID_USER, DATE, KOLICINA) VALUES ("+selectedID+","+userID+",'"+date+"',"+prevzem+")";
-			console.log(query2);
-			console.log(prevzem);
-			console.log(query);
 			connection.query(query, function(err, results){
-				if(err){console.log(err);}
+				if(err){
+					console.log(err);}
 				else{
 					connection.query(query2, function(err, results){
 						if(err){console.log(err);}
@@ -302,7 +291,6 @@ connection.connect(function (err) {
 	function getNarocila(){
 		getUserAndID();
 		var query = "select i.ID_ORDER, PARTNAME, PARTNUMBER, REQUESTED, ORDERED, ARRIVED, CANCELLED from narocilo i JOIN narocil u ON (u.ID_ORDER = i.ID_ORDER) JOIN uporabnik t ON (t.ID_USER = u.ID_USER) AND t.ID_USER = "+userID;
-		console.log(query);
 		var hits;
 		var row;
 		var cell;
@@ -346,28 +334,48 @@ connection.connect(function (err) {
 		var orderID;
 		var partNumber = document.getElementById("stDela").value;
 		var partName = document.getElementById("imeDela").value;
-		console.log(partNumber+" | "+partName);
-		var query = "INSERT INTO narocilo (PARTNUMBER,PARTNAME,REQUESTED,ORDERED,ARRIVED,CANCELLED) VALUES('"+partNumber+"','"+partName+"',1,0,0,0)";
-		console.log(query);
-		var query2 = "SELECT ID_ORDER FROM narocilo ORDER BY ID_ORDER DESC LIMIT 1";	
-		connection.query(query, function(err, results){
+
+		if (isNaN(partNumber)) {
+			alert("Številka artikla vsebuje prepovedane znake!");
+			return;
+		}
+
+		var query = "select ID_ITEM, PARTNAME, PARTNUMBER, SUPPLY from shramba WHERE PARTNUMBER =" + partNumber;
+		var hits;
+		connection.query(query, function(err,results){
 			if(err){console.log(err);}
-			else{
-				connection.query(query2,function(err,results){
-					if(err){console.log(err);}
-					else{
-						orderID = JSON.parse(JSON.stringify(results));
-						orderID = orderID[0].ID_ORDER;						
-						var query3 = "INSERT INTO narocil (ID_ORDER, ID_USER) values ("+orderID+","+userID+")";
-						connection.query(query3, function(err, results){
-							if(err){console.log(err);}
-							else{
-								var modal = $("#myModal").modal();
-							}
-							
-						});
-					}
-				});
+			else {
+				hits = JSON.parse(JSON.stringify(results));
+				if (hits.length > 0) {
+					partName = hits[0].PARTNAME;
+					partNumber = hits[0].PARTNUMBER;
+
+					var query = "INSERT INTO narocilo (PARTNUMBER,PARTNAME,REQUESTED,ORDERED,ARRIVED,CANCELLED) VALUES('"+partNumber+"','"+partName+"',1,0,0,0)";
+					var query2 = "SELECT ID_ORDER FROM narocilo ORDER BY ID_ORDER DESC LIMIT 1";	
+					connection.query(query, function(err, results){
+						if(err){console.log(err);}
+						else{
+							connection.query(query2,function(err,results){
+								if(err){console.log(err);}
+								else{
+									orderID = JSON.parse(JSON.stringify(results));
+									orderID = orderID[0].ID_ORDER;						
+									var query3 = "INSERT INTO narocil (ID_ORDER, ID_USER) values ("+orderID+","+userID+")";
+									connection.query(query3, function(err, results){
+										if(err){console.log(err);}
+										else{
+											var modal = $("#myModal").modal();
+										}
+										
+									});
+								}
+							});
+						}
+					});
+				}
+				else {
+					alert("Zahtevanega dela ni mogoče naročiti.");
+				}
 			}
 		});
 	}
@@ -473,9 +481,7 @@ connection.connect(function (err) {
 		var table = $('.table').DataTable();
 		var data = table.row( $(e).parents('tr') ).data();	
 		var statusOrder = data[2];
-		console.log(data);
 		var orderID = data[4];
-		//console.log(partname+"|"+partnumber+"|"+statusOrder+"|"+orderID);
 		var query;
 		switch(statusOrder){
 			case "Preklicano":query = "DELETE FROM narocilo WHERE ID_ORDER = "+orderID;break;
@@ -562,7 +568,6 @@ connection.connect(function (err) {
 		var username = document.getElementById("spremeniUsername").value;
 		var password = document.getElementById("spremeniPassword").value;
 		var skladiscnik = (document.getElementById("spremeniSkladiscnik").checked) ? 1 : 0;
-		console.log(full_name+"|"+username+"|"+password+"|"+skladiscnik);
 		var querySklad = "UPDATE uporabnik SET SKLADISCNIK = "+skladiscnik+" WHERE ID_USER = "+selectedID;
 		connection.query(querySklad, function(err, results){if(err){console.log(err)}});
 		var query;
