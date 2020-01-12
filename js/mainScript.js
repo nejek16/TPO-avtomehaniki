@@ -593,7 +593,7 @@ function deleteUser(e) {
 	if (confirm('Ali res želite izbrisati uporabnika?')) {
 		var table = $('.table').DataTable();
 		var data = table.row($(e).parents('tr')).data();
-		var query = "DELETE FROM uporabnik WHERE ID_USER = " + data[0];
+		var query = "DELETE FROM uporabnik WHERE ID_USER = " + data[3];
 		connection.query(query, function (err, results) {
 			if (err) { console.log(err); }
 			else {
